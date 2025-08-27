@@ -19,14 +19,14 @@
   a:hover{opacity:.9}
   h1,h2{letter-spacing:.2px}
 
-  /* ===== Site background (CSS texture + canvas embers) with parallax ===== */
+  /* ===== Site background (textured + cinematic embers) ===== */
   .site-bg{position:fixed; inset:0; z-index:-2; overflow:hidden;
     background:
-      radial-gradient(1200px 800px at 20% 0%, rgba(255,106,0,.06), transparent 40%),
-      radial-gradient(900px 700px at 80% 100%, rgba(76,177,255,.05), transparent 45%),
-      linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.85)),
+      radial-gradient(1200px 800px at 20% 0%, rgba(255,106,0,.07), transparent 40%),
+      radial-gradient(900px 700px at 80% 100%, rgba(76,177,255,.06), transparent 45%),
+      linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.9)),
       #0b0c10;}
-  .grain{position:absolute; inset:-50%; opacity:.06; pointer-events:none; z-index:-1;
+  .grain{position:absolute; inset:-50%; opacity:.07; pointer-events:none; z-index:-1;
     background:
       repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 2px),
       repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0 1px, transparent 1px 2px);
@@ -34,9 +34,9 @@
   @keyframes grain{0%{transform:translate3d(0,0,0)}25%{transform:translate3d(-1%,1%,0)}50%{transform:translate3d(1%,-1%,0)}75%{transform:translate3d(1%,1%,0)}100%{transform:translate3d(0,0,0)}}
   .vignette{position:absolute; inset:0; pointer-events:none;
     background:
-      radial-gradient(120% 120% at 50% 20%, transparent 0%, rgba(0,0,0,.25) 55%, rgba(0,0,0,.55) 85%),
-      radial-gradient(140% 140% at 50% 120%, transparent 0%, rgba(0,0,0,.55) 60%);}
-  #embersCanvas{position:absolute; inset:0; will-change:transform; opacity:.7;} /* brighter */
+      radial-gradient(120% 120% at 50% 20%, transparent 0%, rgba(0,0,0,.25) 55%, rgba(0,0,0,.6) 85%),
+      radial-gradient(140% 140% at 50% 120%, transparent 0%, rgba(0,0,0,.6) 60%);}
+  #embersCanvas{position:absolute; inset:0; will-change:transform; opacity:.9; mix-blend-mode:screen;} /* brighter + glow */
 
   /* ===== Layout + sticky header ===== */
   .wrap{max-width:1120px;margin:0 auto;padding:16px 24px}
@@ -56,13 +56,13 @@
   .burger span::before{position:absolute; top:-6px}
   .burger span::after{position:absolute; top:6px}
 
-  /* ===== Hero with full image + blurred edge blend ===== */
+  /* ===== Hero: full image + blurred edge + slight blur on main ===== */
   .hero{position:relative; min-height:56vh; display:grid; place-items:center; text-align:center; border-bottom:1px solid var(--border); overflow:hidden}
   .hero-bg{position:absolute; inset:0; overflow:hidden}
   .hero-bg::before{content:""; position:absolute; inset:-10%;
-    background:url('hero.jpg') center/cover no-repeat; filter:blur(30px) brightness(.6); transform:scale(1.2);}
+    background:url('hero.jpg') center/cover no-repeat; filter:blur(32px) brightness(.6); transform:scale(1.22);}
   .hero-bg::after{content:""; position:absolute; inset:0;
-    background:url('hero.jpg') center center/contain no-repeat;} /* full image, no crop */
+    background:url('hero.jpg') center center/contain no-repeat; filter:blur(1.6px) contrast(1.05);} /* slight blur on main */
   .hero-inner{position:relative; z-index:1; padding:40px}
   .hero h1{font-size:clamp(1.8rem,6vw,3.4rem); margin:0}
 
@@ -93,7 +93,7 @@
 </style>
 </head>
 <body>
-  <!-- Background layers: CSS texture + canvas embers + vignette -->
+  <!-- Background layers: texture + cinematic embers + vignette -->
   <div class="site-bg" aria-hidden="true">
     <div class="grain"></div>
     <canvas id="embersCanvas"></canvas>
@@ -112,8 +112,8 @@
         <a href="#music">Music</a>
         <a href="#video">Video</a>
         <a href="#store">Store</a>
+        <a href="#about">About</a>      <!-- moved above Press -->
         <a href="#press">Press</a>
-        <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
@@ -215,6 +215,25 @@
     </div>
   </section>
 
+  <!-- About (moved above Press; full bio verbatim) -->
+  <section id="about">
+    <div class="wrap">
+      <h2>About The Essence</h2>
+      <div class="media-grid">
+        <div>
+          <p class="lead">About The Essence<br><br>
+Tim Pelzer is a multi instrumentalist who resides just outside of Calgary Alberta, Canada. The Essence is a passion project he started in 2019 out of a desire to see the production of more quality, Christian music that challenges and edifies the listener. "Cliché or compromise" have long been the predominant options within Christian art, and Tim wants to be a part of the recent tide of change that seems to be occurring.<br><br>
+There is a prevailing narrative in the Christian Music Industry that in order for Christian music to find success, the "Christian" element must be watered down, or follow the same cookie cutter templates that have already been tried. This may be true... if the sole pursuit is success in the eyes of the large record labels. But what would happen if more Christian artists sought to create music with the primary purpose of honoring Christ, a secondary purpose of achieving quality and exceptionalism, and a tertiary purpose of finding success? Would we find that uncompromising biblical messaging actually resonates with more people than we think? Is there a "void" in the music industry waiting to be filled?<br><br>
+A combination of a love for the Word of God, some challenging life experiences, and a taste for hard hitting, cinematic rock/metal are what have shaped the sound of The Essence. Sonic influences include legendary powerhouses such as Red, Skillet, Chevelle, Muse, Starset, Disciple, Love and Death, Silent Planet, and of course, Hans Zimmer. "Caverns" Is The Essence's debut album, comprised of songs Tim has written over the past 6 years which stem from his intense pursuit of purpose.<br><br>
+While the present overall production value may be limited (as with most independent artists starting out),  Tim has a vision for where this music could someday go as he grows in his knowledge and resources within the realm of music production. There is no room for filler tracks in The Essence's discography. If a track makes it into the public space, it's because it has been poured over with intentionality and refined with scrutiny. Whether it's a hit, or a flop, you can be confident no track will ever lack effort. All this to create hard hitting rock with a hard hitting message.</p>
+        </div>
+        <div>
+          <img src="press1.jpg" alt="Tim Pelzer portrait" style="border-radius:14px;border:1px solid var(--border)">
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Press -->
   <section id="press">
     <div class="wrap">
@@ -241,25 +260,6 @@
             <span class="tag">For press: tim.theessence@gmail.com</span>
           </div>
           <p style="margin-top:12px"><a class="btn" href="press-kit.zip">Download Press Kit (ZIP)</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- About (full bio verbatim) -->
-  <section id="about">
-    <div class="wrap">
-      <h2>About The Essence</h2>
-      <div class="media-grid">
-        <div>
-          <p class="lead">About The Essence<br><br>
-Tim Pelzer is a multi instrumentalist who resides just outside of Calgary Alberta, Canada. The Essence is a passion project he started in 2019 out of a desire to see the production of more quality, Christian music that challenges and edifies the listener. "Cliché or compromise" have long been the predominant options within Christian art, and Tim wants to be a part of the recent tide of change that seems to be occurring.<br><br>
-There is a prevailing narrative in the Christian Music Industry that in order for Christian music to find success, the "Christian" element must be watered down, or follow the same cookie cutter templates that have already been tried. This may be true... if the sole pursuit is success in the eyes of the large record labels. But what would happen if more Christian artists sought to create music with the primary purpose of honoring Christ, a secondary purpose of achieving quality and exceptionalism, and a tertiary purpose of finding success? Would we find that uncompromising biblical messaging actually resonates with more people than we think? Is there a "void" in the music industry waiting to be filled?<br><br>
-A combination of a love for the Word of God, some challenging life experiences, and a taste for hard hitting, cinematic rock/metal are what have shaped the sound of The Essence. Sonic influences include legendary powerhouses such as Red, Skillet, Chevelle, Muse, Starset, Disciple, Love and Death, Silent Planet, and of course, Hans Zimmer. "Caverns" Is The Essence's debut album, comprised of songs Tim has written over the past 6 years which stem from his intense pursuit of purpose.<br><br>
-While the present overall production value may be limited (as with most independent artists starting out),  Tim has a vision for where this music could someday go as he grows in his knowledge and resources within the realm of music production. There is no room for filler tracks in The Essence's discography. If a track makes it into the public space, it's because it has been poured over with intentionality and refined with scrutiny. Whether it's a hit, or a flop, you can be confident no track will ever lack effort. All this to create hard hitting rock with a hard hitting message.</p>
-        </div>
-        <div>
-          <img src="press1.jpg" alt="Tim Pelzer portrait" style="border-radius:14px;border:1px solid var(--border)">
         </div>
       </div>
     </div>
@@ -313,16 +313,16 @@ While the present overall production value may be limited (as with most independ
     });
   });
 
-  // ===== Subtle ember particle system (Option A) + parallax
+  // ===== Cinematic ember particle system (Option B) + parallax
   const canvas = document.getElementById('embersCanvas');
   const ctx = canvas.getContext('2d', { alpha: true });
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
   let W, H;
 
   const EMBERS = [];
-  const COUNT = 120;          // slightly denser so you can see them
+  const COUNT = 260;          // denser for cinematic feel
   const BASE_HUE = 28;        // ember orange
-  const PARALLAX_FACTOR = 0.2;
+  const PARALLAX_FACTOR = 0.15;
 
   function resize(){
     W = canvas.width = Math.floor(window.innerWidth * dpr);
@@ -340,39 +340,77 @@ While the present overall production value may be limited (as with most independ
     for(let i=0;i<COUNT;i++){
       EMBERS.push({
         x: rand(0, W),
-        y: rand(H*0.3, H),
-        r: rand(0.8, 2.4) * dpr,
-        a: rand(0.2, 0.5),
-        vy: rand(-0.08, -0.25) * dpr,
-        vx: rand(-0.05, 0.05) * dpr,
-        flick: rand(0.5, 1.5),
+        y: rand(H*0.25, H),
+        r: rand(0.8, 2.8) * dpr,
+        a: rand(0.35, 0.85),
+        vy: rand(-0.10, -0.32) * dpr,
+        vx: rand(-0.06, 0.06) * dpr,
+        flick: rand(0.6, 1.8),
+        trail: rand(6, 22) * dpr
       });
     }
   }
   spawn();
 
   function draw(){
-    ctx.clearRect(0,0,W,H);
-    for(const p of EMBERS){
-      p.x += p.vx; p.y += p.vy;
-      if(p.y < -10 || p.x < -10 || p.x > W + 10){
-        p.x = rand(0, W); p.y = H + rand(0, H*0.2);
-      }
-      const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*3);
-      grd.addColorStop(0, `hsla(${BASE_HUE}, 100%, 60%, ${p.a})`);
-      grd.addColorStop(0.4, `hsla(${BASE_HUE+5}, 100%, 50%, ${p.a*0.6})`);
-      grd.addColorStop(1, `hsla(${BASE_HUE+20}, 90%, 40%, 0)`);
-      ctx.beginPath(); ctx.fillStyle = grd;
-      ctx.arc(p.x, p.y, p.r*3, 0, Math.PI*2); ctx.fill();
+    // slight global fade to create soft trails
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(0,0,0,0.14)';
+    ctx.fillRect(0,0,W,H);
 
-      p.r += (Math.random()-0.5) * 0.03 * p.flick;
-      p.r = Math.max(0.6*dpr, Math.min(p.r, 3*dpr));
+    // additive glow
+    ctx.globalCompositeOperation = 'lighter';
+
+    for(const p of EMBERS){
+      // draw elongated glow (streak/trail)
+      const angle = Math.atan2(p.vy, p.vx);
+      const tx = Math.cos(angle) * p.trail;
+      const ty = Math.sin(angle) * p.trail;
+
+      const x2 = p.x - tx;
+      const y2 = p.y - ty;
+
+      const grad = ctx.createLinearGradient(p.x, p.y, x2, y2);
+      grad.addColorStop(0,  `hsla(${BASE_HUE},   100%, 65%, ${p.a})`);
+      grad.addColorStop(0.5,`hsla(${BASE_HUE+8}, 100%, 55%, ${p.a*0.5})`);
+      grad.addColorStop(1,  `hsla(${BASE_HUE+18}, 90%, 45%, 0)`);
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = Math.max(1, p.r*0.9);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      // core ember glow
+      const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*3);
+      grd.addColorStop(0, `hsla(${BASE_HUE}, 100%, 65%, ${p.a})`);
+      grd.addColorStop(0.45, `hsla(${BASE_HUE+6}, 100%, 55%, ${p.a*0.6})`);
+      grd.addColorStop(1, `hsla(${BASE_HUE+20}, 90%, 40%, 0)`);
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r*3, 0, Math.PI*2);
+      ctx.fill();
+
+      // motion
+      p.x += p.vx; p.y += p.vy;
+
+      // flicker and size bounds
+      p.r += (Math.random()-0.5) * 0.05 * p.flick;
+      p.r = Math.max(0.7*dpr, Math.min(p.r, 3.2*dpr));
+
+      // recycle
+      if(p.y < -20 || p.x < -20 || p.x > W + 20){
+        p.x = rand(0, W); p.y = H + rand(0, H*0.25);
+        p.vx = rand(-0.06, 0.06) * dpr;
+        p.vy = rand(-0.10, -0.32) * dpr;
+      }
     }
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
 
-  // Parallax: move background canvas slower than content (fixed bug here)
+  // Parallax: move background canvas slower than content
   function parallax(){
     const y = window.pageYOffset || document.documentElement.scrollTop || 0;
     canvas.style.transform = `translateY(${y * PARALLAX_FACTOR}px)`;
