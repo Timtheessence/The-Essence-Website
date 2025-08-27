@@ -58,16 +58,24 @@
       position:relative; min-height:68vh; display:grid; place-items:center; text-align:center;
       border-bottom:1px solid var(--border); overflow:hidden;
     }
-   .hero .bg{
+   .hero .bg {
   position:absolute; inset:0;
-  background:
-    linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.75)) center/cover no-repeat,
-    #0b0c10; /* fallback color */
+  background:#0b0c10; /* fallback color */
+  overflow:hidden;
 }
-.hero .bg::after{
+.hero .bg::before {
+  content:"";
+  position:absolute; inset:0;
+  background:url('hero.jpg') center/cover no-repeat;
+  filter:blur(30px) brightness(0.6);
+  transform:scale(1.2); /* enlarge so blur fills edges */
+}
+.hero .bg::after {
   content:"";
   position:absolute; inset:0;
   background:url('hero.jpg') center center/contain no-repeat;
+  z-index:1;
+}
 }
     @keyframes pan{from{background-position:50% 50%}to{background-position:60% 55%}}
     .hero::after{
@@ -332,6 +340,7 @@ While the present overall production value may be limited (as with most independ
   </script>
 </body>
 </html>
+
 
 
 
