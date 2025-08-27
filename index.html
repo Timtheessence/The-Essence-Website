@@ -1,94 +1,254 @@
 <!DOCTYPE html>
-<h3 style="margin:0 0 6px">Caverns Tee</h3>
-<p class="price">$28</p>
-<a class="btn" href="PRINTFUL_STORE_URL" target="_blank" rel="noopener">Buy</a>
-</div>
-</article>
-</div>
-<div class="row" style="margin-top:16px">
-<a class="cta" href="PRINTFUL_STORE_URL" target="_blank" rel="noopener">Shop All</a>
-</div>
-</div>
-</section>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Essence | Official Site</title>
+  <meta name="description" content="The Essence — cinematic rock/metal by Tim Pelzer. Listen, watch, press assets, and merch." />
+  <style>
+    /* ===== Theme ===== */
+    :root{
+      --bg:#0b0c10;        /* deep charcoal */
+      --panel:#121317;     /* slightly lighter */
+      --ink:#e9edf1;       /* near-white */
+      --muted:#a6b0ba;     /* text muted */
+      --accent:#ff6a00;    /* ember orange */
+      --accent2:#4cb1ff;   /* icy blue */
+      --card:#151822;
+      --border:#232632;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
 
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;scroll-behavior:smooth}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+    img{max-width:100%;height:auto;display:block}
+    a{color:var(--accent2);text-decoration:none}
+    a:hover{opacity:.9}
 
-<!-- ===== Press ===== -->
-<section id="press">
-<div class="wrap">
-<h2>Press</h2>
-<p class="lead">Photos, logos, and a short bio for media use. Click any image to view full‑size.</p>
+    /* ===== Layout ===== */
+    .wrap{max-width:1120px;margin:0 auto;padding:24px}
+    header{position:sticky;top:0;z-index:20;background:rgba(11,12,16,.9);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--border)}
+    .nav{display:flex;align-items:center;gap:18px}
+    .nav .brand{display:flex;align-items:center;gap:12px}
+    .nav .brand img{height:40px;width:auto}
+    .nav .spacer{flex:1}
+    .nav a{color:var(--ink)}
 
+    /* ===== Hero ===== */
+    .hero{position:relative;min-height:68vh;display:grid;place-items:center;text-align:center;border-bottom:1px solid var(--border);overflow:hidden}
+    .hero .bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.75)),url('hero.jpg') center/cover no-repeat;animation:pan 40s linear infinite alternate}
+    @keyframes pan{from{background-position:50% 50%}to{background-position:60% 55%}}
+    /* ember sparkle layer */
+    .hero::after{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 20% 30%,rgba(255,106,0,.10),transparent 35%),radial-gradient(circle at 80% 70%,rgba(76,177,255,.08),transparent 35%);filter:blur(10px);animation:pulse 12s ease-in-out infinite alternate}
+    @keyframes pulse{from{opacity:.55}to{opacity:.85}}
+    .hero-inner{position:relative;z-index:1;padding:40px}
+    .hero h1{font-size:clamp(2rem,6vw,3.6rem);margin:0 0 10px}
+    .hero p{color:var(--muted);font-size:clamp(1rem,2.2vw,1.25rem);margin:0 0 22px}
+    .cta{display:inline-block;padding:12px 18px;border-radius:999px;background:var(--accent);color:#0e0f14;font-weight:700;box-shadow:var(--shadow)}
+    .btn{display:inline-block;padding:10px 14px;border-radius:12px;border:1px solid var(--border)}
 
-<div class="press-grid" style="margin-bottom:18px">
-<a class="press-item" href="press1.jpg" target="_blank"><img src="press1.jpg" alt="Tim Pelzer press photo 1"></a>
-<a class="press-item" href="press2.jpg" target="_blank"><img src="press2.jpg" alt="Tim Pelzer press photo 2"></a>
-<a class="press-item" href="press3.jpg" target="_blank"><img src="press3.jpg" alt="Tim Pelzer press photo 3"></a>
-<a class="press-item" href="press4.jpg" target="_blank"><img src="press4.jpg" alt="Tim Pelzer press photo 4"></a>
-<a class="press-item" href="logo-wordmark.png" target="_blank"><img src="logo-wordmark.png" alt="The Essence wordmark"></a>
-<a class="press-item" href="logo-mark.jpg" target="_blank"><img src="logo-mark.jpg" alt="The Essence brand mark"></a>
-</div>
+    section{padding:60px 0;border-bottom:1px solid var(--border)}
+    h2{font-size:clamp(1.4rem,3vw,2rem);margin:0 0 12px}
+    p.lead{color:var(--muted);margin:0 0 22px}
 
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+    .card .pad{padding:14px}
 
-<div class="card" style="margin-top:10px">
-<div class="pad">
-<h3 style="margin:0 0 6px">Short Bio</h3>
-<p class="lead" style="max-width:70ch">The Essence is the cinematic rock/metal project of multi‑instrumentalist <strong>Tim Pelzer</strong> from the Calgary area. Launched in 2019, The Essence pairs hard‑hitting sonics with unapologetically Christian themes, aiming for excellence without compromise. Drawing on influences like Red, Skillet, Chevelle, Muse, Starset, Disciple, and Hans Zimmer, Tim crafts songs to challenge and edify listeners. Debut album <em>Caverns</em> and new single <em>Entropy</em> showcase his vision for high‑impact, faith‑forward rock.</p>
-<div class="tags" style="margin-top:8px">
-<span class="tag">Genre: Cinematic Rock / Metal</span>
-<span class="tag">Location: Calgary, AB</span>
-<span class="tag">For press: contact@theessence.com</span>
-</div>
-</div>
-</div>
+    .media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
 
+    /* ===== Press grid ===== */
+    .press-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .press-item{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    .press-item .pad{padding:12px;color:var(--muted)}
 
-<!-- Optional: drop a ZIP named press-kit.zip into the repo and uncomment below -->
-<!-- <p style="margin-top:12px"><a class="btn" href="press-kit.zip">Download Press Kit (ZIP)</a></p> -->
-</div>
-</section>
+    /* ===== Store ===== */
+    .store-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .price{color:var(--ink);font-weight:700}
 
+    footer{background:var(--panel);padding:28px 20px;color:var(--muted);text-align:center}
+    .tags{display:flex;flex-wrap:wrap;gap:10px}
+    .tag{font-size:.85rem;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted)}
 
-<!-- ===== About ===== -->
-<section id="about">
-<div class="wrap">
-<h2>About The Essence</h2>
-<div class="media-grid">
-<div>
-<p class="lead">The Essence is a passion project started by Tim Pelzer in 2019 to create quality Christian music that both challenges and edifies. Rather than watering things down, Tim pursues Christ‑honoring lyrics and cinematic rock production—believing excellent, uncompromising art connects with more people than we expect. Shaped by Scripture, real‑life trials, and influences like Red, Skillet, Chevelle, Muse, Starset, Disciple, Love & Death, Silent Planet, and Hans Zimmer, The Essence delivers hard‑hitting songs with a hard‑hitting message.</p>
-<p class="lead">Debut album <em>Caverns</em> collects years of writing and refining; the new single <em>Entropy</em> continues that trajectory. No filler—only work crafted with intention and scrutiny.</p>
-</div>
-<div>
-<img src="press1.jpg" alt="Tim Pelzer portrait" style="border-radius:14px;border:1px solid var(--border)">
-</div>
-</div>
-</div>
-</section>
+    /* small helpers */
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .right{margin-left:auto}
+  </style>
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#home">
+        <img src="logo-wordmark.png" alt="The Essence logo" />
+        <strong>The Essence</strong>
+      </a>
+      <div class="spacer"></div>
+      <nav class="row">
+        <a href="#music">Music</a>
+        <a href="#store">Store</a>
+        <a href="#press">Press</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
 
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="home" aria-label="Hero">
+    <div class="bg" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <h1>Cinematic Rock That Hits Like Fire</h1>
+      <p>New music from <strong>The Essence</strong> — hard‑hitting, faith‑forward, crafted by multi‑instrumentalist <strong>Tim Pelzer</strong>.</p>
+      <div class="row" style="justify-content:center">
+        <a class="cta" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">Listen Now</a>
+        <a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
+      </div>
+    </div>
+  </section>
 
-<!-- ===== Contact ===== -->
-<section id="contact">
-<div class="wrap">
-<h2>Contact</h2>
-<p class="lead">Bookings, licensing, collaborations, or press.</p>
-<div class="row">
-<a class="btn" href="mailto:contact@theessence.com">contact@theessence.com</a>
-<a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
-<a class="btn" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">All Streaming Links</a>
-</div>
-</div>
-</section>
+  <!-- ===== Music ===== -->
+  <section id="music">
+    <div class="wrap">
+      <h2>Music</h2>
+      <p class="lead">Featured releases. Stream everywhere via the promo link.</p>
+      <div class="cards">
+        <article class="card">
+          <img src="entropy-cover.png" alt="Entropy — single cover" />
+          <div class="pad">
+            <h3 style="margin:0 0 6px">Entropy</h3>
+            <p class="lead">Single · 2025</p>
+            <div class="row">
+              <a class="btn" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">All Platforms</a>
+              <a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
+            </div>
+          </div>
+        </article>
+        <article class="card">
+          <img src="caverns-cover.png" alt="Caverns — album cover" />
+          <div class="pad">
+            <h3 style="margin:0 0 6px">Caverns</h3>
+            <p class="lead">Album · 2025</p>
+            <div class="row">
+              <a class="btn" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">All Platforms</a>
+              <a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
+  <!-- ===== Store ===== -->
+  <section id="store">
+    <div class="wrap">
+      <h2>Store</h2>
+      <p class="lead">Connect a Printful storefront when you’re ready. For now these cards link to a single <em>Store</em> URL. Replace <code>PRINTFUL_STORE_URL</code> below once you have it.</p>
+      <div class="store-grid">
+        <article class="card">
+          <img src="logo-mark.jpg" alt="Logo mark tee" />
+          <div class="pad">
+            <h3 style="margin:0 0 6px">Logo Mark Tee</h3>
+            <p class="price">$28</p>
+            <a class="btn" href="PRINTFUL_STORE_URL" target="_blank" rel="noopener">Buy</a>
+          </div>
+        </article>
+        <article class="card">
+          <img src="entropy-cover.png" alt="Entropy artwork tee" />
+          <div class="pad">
+            <h3 style="margin:0 0 6px">Entropy Tee</h3>
+            <p class="price">$28</p>
+            <a class="btn" href="PRINTFUL_STORE_URL" target="_blank" rel="noopener">Buy</a>
+          </div>
+        </article>
+        <article class="card">
+          <img src="caverns-cover.png" alt="Caverns artwork tee" />
+          <div class="pad">
+            <h3 style="margin:0 0 6px">Caverns Tee</h3>
+            <p class="price">$28</p>
+            <a class="btn" href="PRINTFUL_STORE_URL" target="_blank" rel="noopener">Buy</a>
+          </div>
+        </article>
+      </div>
+      <div class="row" style="margin-top:16px">
+        <a class="cta" href="PRINTFUL_STORE_URL" target="_blank" rel="noopener">Shop All</a>
+      </div>
+    </div>
+  </section>
 
-<footer>
-<div class="wrap">
-<div class="row">
-<span>© 2025 The Essence</span>
-<span class="right">Built for GitHub Pages</span>
-</div>
-</div>
-</footer>
+  <!-- ===== Press ===== -->
+  <section id="press">
+    <div class="wrap">
+      <h2>Press</h2>
+      <p class="lead">Photos, logos, and a short bio for media use. Click any image to view full‑size.</p>
+
+      <div class="press-grid" style="margin-bottom:18px">
+        <a class="press-item" href="press1.jpg" target="_blank"><img src="press1.jpg" alt="Tim Pelzer press photo 1"></a>
+        <a class="press-item" href="press2.jpg" target="_blank"><img src="press2.jpg" alt="Tim Pelzer press photo 2"></a>
+        <a class="press-item" href="press3.jpg" target="_blank"><img src="press3.jpg" alt="Tim Pelzer press photo 3"></a>
+        <a class="press-item" href="press4.jpg" target="_blank"><img src="press4.jpg" alt="Tim Pelzer press photo 4"></a>
+        <a class="press-item" href="logo-wordmark.png" target="_blank"><img src="logo-wordmark.png" alt="The Essence wordmark"></a>
+        <a class="press-item" href="logo-mark.jpg" target="_blank"><img src="logo-mark.jpg" alt="The Essence brand mark"></a>
+      </div>
+
+      <div class="card" style="margin-top:10px">
+        <div class="pad">
+          <h3 style="margin:0 0 6px">Short Bio</h3>
+          <p class="lead" style="max-width:70ch">The Essence is the cinematic rock/metal project of multi‑instrumentalist <strong>Tim Pelzer</strong> from the Calgary area. Launched in 2019, The Essence pairs hard‑hitting sonics with unapologetically Christian themes, aiming for excellence without compromise. Drawing on influences like Red, Skillet, Chevelle, Muse, Starset, Disciple, and Hans Zimmer, Tim crafts songs to challenge and edify listeners. Debut album <em>Caverns</em> and new single <em>Entropy</em> showcase his vision for high‑impact, faith‑forward rock.</p>
+          <div class="tags" style="margin-top:8px">
+            <span class="tag">Genre: Cinematic Rock / Metal</span>
+            <span class="tag">Location: Calgary, AB</span>
+            <span class="tag">For press: contact@theessence.com</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional: drop a ZIP named press-kit.zip into the repo and uncomment below -->
+      <!-- <p style="margin-top:12px"><a class="btn" href="press-kit.zip">Download Press Kit (ZIP)</a></p> -->
+    </div>
+  </section>
+
+  <!-- ===== About ===== -->
+  <section id="about">
+    <div class="wrap">
+      <h2>About The Essence</h2>
+      <div class="media-grid">
+        <div>
+          <p class="lead">The Essence is a passion project started by Tim Pelzer in 2019 to create quality Christian music that both challenges and edifies. Rather than watering things down, Tim pursues Christ‑honoring lyrics and cinematic rock production—believing excellent, uncompromising art connects with more people than we expect. Shaped by Scripture, real‑life trials, and influences like Red, Skillet, Chevelle, Muse, Starset, Disciple, Love & Death, Silent Planet, and Hans Zimmer, The Essence delivers hard‑hitting songs with a hard‑hitting message.</p>
+          <p class="lead">Debut album <em>Caverns</em> collects years of writing and refining; the new single <em>Entropy</em> continues that trajectory. No filler—only work crafted with intention and scrutiny.</p>
+        </div>
+        <div>
+          <img src="press1.jpg" alt="Tim Pelzer portrait" style="border-radius:14px;border:1px solid var(--border)">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section id="contact">
+    <div class="wrap">
+      <h2>Contact</h2>
+      <p class="lead">Bookings, licensing, collaborations, or press.</p>
+      <div class="row">
+        <a class="btn" href="mailto:contact@theessence.com">contact@theessence.com</a>
+        <a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
+        <a class="btn" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">All Streaming Links</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="row">
+        <span>© 2025 The Essence</span>
+        <span class="right">Built for GitHub Pages</span>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
+
 
 
 
