@@ -27,18 +27,23 @@
     a:hover{opacity:.9}
     h1,h2{letter-spacing:.2px}
 
-    /* ===========================
-       Site background (texture + sparks) with parallax
-       =========================== */
-    .site-bg{
-      position:fixed; inset:0; z-index:-3; overflow:hidden;
-      background:
-        /* soft colored washes for depth */
-        radial-gradient(1200px 800px at 22% -10%, rgba(255,106,0,.08), transparent 40%),
-        radial-gradient(900px 700px at 80% 110%, rgba(76,177,255,.06), transparent 45%),
-        linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.9)),
-        #0b0c10;
-    }
+  /* ===========================
+   Site background (texture + sparks) with parallax
+   =========================== */
+.site-bg{
+  position:fixed; inset:0; z-index:-3; overflow:hidden;
+  background:
+    /* soft colored washes for depth */
+    radial-gradient(1200px 800px at 22% -10%, rgba(255,106,0,.08), transparent 40%),
+    radial-gradient(900px 700px at 80% 110%, rgba(76,177,255,.06), transparent 45%),
+    linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.9)),
+    url('assets/essence-bg-v2.jpg') center/cover no-repeat,
+    #0b0c10;
+  background-image: image-set(
+    url('assets/essence-bg-v2.webp') type('image/webp'),
+    url('assets/essence-bg-v2.jpg') type('image/jpeg')
+  );
+}
     /* grain overlay for grit */
     .grain{
       position:absolute; inset:-50%; opacity:.065; pointer-events:none; z-index:-1;
@@ -516,3 +521,4 @@ While the present overall production value may be limited (as with most independ
   </script>
 </body>
 </html>
+
