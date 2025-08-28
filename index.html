@@ -193,7 +193,7 @@
   <section id="video">
     <div class="wrap">
       <h2>Featured Video</h2>
-      <div class="media-grid">
+    <div class="media-grid">
         <iframe
           src="https://www.youtube.com/embed/B8R860OmTOk"
           title="The Essence - Featured Video"
@@ -272,14 +272,13 @@ While the present overall production value may be limited (as with most independ
   <section id="press">
     <div class="wrap">
       <h2>Press</h2>
-      <p class="lead">Photos, logos, and a short bio for media use. Click any image to view full-size.</p>
-      <div class="press-grid" style="margin-bottom:18px">
-        <a class="press-item" href="logo-wordmark.png" target="_blank"><img src="logo-wordmark.png" alt="The Essence wordmark"></a>
-        <a class="press-item" href="press1.jpg" target="_blank"><img src="press1.jpg" alt="Tim Pelzer press photo 1"></a>
-        <a class="press-item" href="press2.jpg" target="_blank"><img src="press2.jpg" alt="Tim Pelzer press photo 2"></a>
-        <a class="press-item" href="press3.jpg" target="_blank"><img src="press3.jpg" alt="Tim Pelzer press photo 3"></a>
-        <a class="press-item" href="logo-mark.jpg" target="_blank"><img src="logo-mark.jpg" alt="The Essence brand mark"></a>
-      </div>
+      <p class="lead">Click the collage to download the full press kit (ZIP). Add photos as <code>press-01.jpg</code>, <code>press-02.jpg</code>, …; the collage updates automatically. Logos are included only after photos.</p>
+
+      <!-- Collage preview (auto-generated) that downloads the ZIP -->
+      <a class="press-item" href="press-kit.zip" download>
+        <img id="pressCollage" src="" alt="Press kit collage — click to download ZIP" style="border-radius:16px;border:1px solid var(--border)">
+      </a>
+
       <div class="card" style="margin-top:10px">
         <div class="pad">
           <h3 style="margin:0 0 6px">Short Bio</h3>
@@ -289,7 +288,7 @@ While the present overall production value may be limited (as with most independ
             <span class="tag">Location: Calgary, AB</span>
             <span class="tag">For press: tim.theessence@gmail.com</span>
           </div>
-          <p style="margin-top:12px"><a class="btn" href="press-kit.zip">Download Press Kit (ZIP)</a></p>
+          <p style="margin-top:12px"><a class="btn" href="press-kit.zip" download>Download Press Kit (ZIP)</a></p>
         </div>
       </div>
     </div>
@@ -348,6 +347,132 @@ While the present overall production value may be limited (as with most independ
         }
       });
     });
+
+    // ===========================
+    // Auto-generate Press Collage (photos first, then logos; de-dup)
+    // ===========================
+    (function buildPressCollage(){
+      const canvas = document.createElement('canvas');
+      const W = canvas.width = 1200;   // final collage size
+      const H = canvas.height = 675;   // 16:9
+      const ctx = canvas.getContext('2d');
+
+      // 1) Photo candidates (new + legacy). Add as many as you like.
+      const photoCandidates = [
+        // Preferred numeric pattern:
+        ...Array.from({length: 24}, (_,i) => `press-${String(i+1).padStart(2,'0')}.jpg`),
+        // Legacy names you may already have:
+        'press1.jpg','press2.jpg','press3.jpg','press4.jpg','press5.jpg','press6.jpg'
+      ];
+
+      // 2) Logo/mark variants (your new additional files; safe unique names)
+      const logoCandidates = [
+        'logo-wordmark.png',                        // existing (header)
+        'logo-wordmark-black.jpg',
+        'logo-wordmark-white-on-black-wide.jpg',
+        'logo-mark.jpg',                            // existing (store tile)
+        'logo-mark.png',
+        'logo-mark-alt.jpg',
+        'logo-mark-inverse.png',
+        'logo-mark-with-wordmark.jpg',
+        'logo-mark-with-wordmark.png',
+        'logo-mark-with-wordmark-inverse.png',
+        'logo-mark-with-wordmark-inverse-on-black.jpg',
+        // optional alternates you might add later
+        'logo-wordmark-alt.png',
+        'logo-mark-alt-1.png'
+      ];
+
+      // Helper to load an image if it exists
+      function load(src){
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve({ ok:true, src, img });
+          img.onerror = () => resolve({ ok:false, src });
+          img.src = src;
+        });
+      }
+
+      // Try to load everything, but keep photos first; de-dup by src
+      const seen = new Set();
+      Promise.all([
+        ...photoCandidates.map(load),
+        ...logoCandidates.map(load)
+      ]).then(results => {
+        const photos = results.filter(r => r.ok && photoCandidates.includes(r.src) && !seen.has(r.src) && seen.add(r.src));
+        const logos  = results.filter(r => r.ok && logoCandidates.includes(r.src) && !seen.has(r.src) && seen.add(r.src));
+
+        // Build final list: photos first, then logos (cap to 9 tiles for clarity)
+        const selected = [...photos, ...logos].slice(0, 9).map(r => r.img);
+
+        // Background
+        ctx.fillStyle = '#0b0c10';
+        ctx.fillRect(0,0,W,H);
+
+        if (selected.length === 0){
+          // Fallback hint
+          ctx.fillStyle = '#a6b0ba';
+          ctx.font = '28px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial';
+          ctx.fillText('Add photos as press-01.jpg, press-02.jpg, … to build this collage.', 36, H/2);
+          document.getElementById('pressCollage').src = canvas.toDataURL('image/jpeg', 0.9);
+          return;
+        }
+
+        // Grid geometry (up to 3x3)
+        const cols = Math.min(3, Math.ceil(Math.sqrt(selected.length)));
+        const rows = Math.min(3, Math.ceil(selected.length / cols));
+        const pad  = 18;
+        const cellW = Math.floor((W - pad*(cols+1)) / cols);
+        const cellH = Math.floor((H - pad*(rows+1)) / rows);
+
+        function drawRounded(img, x, y, w, h, radius){
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(x+radius, y);
+          ctx.arcTo(x+w, y, x+w, y+h, radius);
+          ctx.arcTo(x+w, y+h, x, y+h, radius);
+          ctx.arcTo(x, y+h, x, y, radius);
+          ctx.arcTo(x, y, x+w, y, radius);
+          ctx.closePath();
+          ctx.clip();
+
+          // cover-fit crop
+          const arImg = img.width / img.height;
+          const arCell = w / h;
+          let dw=w, dh=h, sx=0, sy=0, sw=img.width, sh=img.height;
+          if (arImg > arCell) {
+            // too wide -> crop sides
+            sh = img.height;
+            sw = sh * arCell;
+            sx = (img.width - sw) / 2;
+          } else {
+            // too tall -> crop top/bottom
+            sw = img.width;
+            sh = sw / arCell;
+            sy = (img.height - sh) / 2;
+          }
+          ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+          ctx.restore();
+        }
+
+        // Draw tiles
+        selected.forEach((img, i) => {
+          const c = i % cols;
+          const r = Math.floor(i / cols);
+          const x = pad + c*(cellW+pad);
+          const y = pad + r*(cellH+pad);
+          drawRounded(img, x, y, cellW, cellH, 16);
+        });
+
+        // Soft inner stroke
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(3,3,W-6,H-6);
+
+        // Output to <img>
+        document.getElementById('pressCollage').src = canvas.toDataURL('image/jpeg', 0.9);
+      });
+    })();
   </script>
 </body>
 </html>
