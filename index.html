@@ -272,10 +272,10 @@ While the present overall production value may be limited (as with most independ
   <section id="press">
     <div class="wrap">
       <h2>Press</h2>
-      <p class="lead">Click the collage to download the full press kit (ZIP). Add photos as <code>press-01.jpg</code>, <code>press-02.jpg</code>, …; the collage updates automatically. Logos are included after photos.</p>
+      <p class="lead">Click the collage to download the full press kit (ZIP). Add photos as <code>press-01.jpg</code>, <code>press-02.jpg</code>, …; the collage and ZIP update automatically. Logos are included after photos.</p>
 
       <!-- Collage preview (auto-generated) that downloads the ZIP -->
-      <a class="press-item" href="press-kit.zip" download>
+      <a class="press-item" id="collageLink" href="#" download>
         <img id="pressCollage" src="" alt="Press kit collage — click to download ZIP" style="border-radius:16px;border:1px solid var(--border)">
       </a>
 
@@ -288,7 +288,9 @@ While the present overall production value may be limited (as with most independ
             <span class="tag">Location: Calgary, AB</span>
             <span class="tag">For press: tim.theessence@gmail.com</span>
           </div>
-          <p style="margin-top:12px"><a class="btn" href="press-kit.zip" download>Download Press Kit (ZIP)</a></p>
+          <p style="margin-top:12px">
+            <a class="btn" id="downloadZipBtn" href="#" download>Download Press Kit (ZIP)</a>
+          </p>
         </div>
       </div>
     </div>
@@ -317,6 +319,9 @@ While the present overall production value may be limited (as with most independ
       </div>
     </div>
   </footer>
+
+  <!-- JSZip for in-browser ZIP creation -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
   <script>
     // ===========================
@@ -349,32 +354,20 @@ While the present overall production value may be limited (as with most independ
     });
 
     // ===========================
-    // Auto-generate Press Collage
-    //  - Photos first, then logos
-    //  - Search in root and /assets/
-    //  - Try multiple extensions
-    //  - Include your newly uploaded names (even with double extensions/underscore)
-    //  - De-dup and cache-bust
+    // Shared: discover Press assets (root + /assets/, multi-ext),
+    // cache-bust hourly, photos first then logos
     // ===========================
-    (function buildPressCollage(){
-      const canvas = document.createElement('canvas');
-      const W = canvas.width = 1200;   // final collage size
-      const H = canvas.height = 675;   // 16:9
-      const ctx = canvas.getContext('2d');
+    const PRESS = { paths: { photos: [], logos: [] }, images: { photos: [], logos: [] } };
 
-      // Cache-buster (hourly) to beat GH Pages cached 404s
-      const BUST = String(Math.floor(Date.now()/3600000));
+    function listCandidates() {
+      const DIRS = ['', 'assets/'];
+      const EXTS = ['.jpg','.jpeg','.png','.webp'];
 
-      const DIRS  = ['', 'assets/'];                         // search in root and /assets/
-      const EXTS  = ['.jpg','.jpeg','.png','.webp'];         // try common extensions
-
-      // Photo patterns (press-01.jpg .. press-24.jpg + legacy press1.jpg ..)
       const photoBases = [
         ...Array.from({length:24}, (_,i)=>`press-${String(i+1).padStart(2,'0')}`),
         'press1','press2','press3','press4','press5','press6'
       ];
 
-      // Normal/expected logo names (single extensions)
       const normalLogoNames = [
         'logo-wordmark.png',
         'logo-wordmark-black.jpg',
@@ -387,16 +380,16 @@ While the present overall production value may be limited (as with most independ
         'logo-mark-with-wordmark.png',
         'logo-mark-with-wordmark-inverse.png',
         'logo-mark-with-wordmark-inverse-on-black.jpg',
-        'logo-wordmark-alt.png',
+        'logo-wordmark-alt.png'
       ];
 
-      // Your NEW uploaded filenames with double extensions / underscore / alt naming
-      const explicitLogoNames = [
+      // (Optional) legacy odd names support; harmless if not present
+      const oddLogoNames = [
         'logo-wordmark-alt.png.png',
         'logo_wordmark_black.jpg.jpg',
         'logo-wordmark-white-on-black-wide.jpg.jpg',
         'logo-mark-with-wordmark.jpg.jpg',
-        'logo-with-wordmark.png.png',                       // keep this exact typo so it loads
+        'logo-with-wordmark.png.png',
         'logo-mark-alt.jpg.jpg',
         'logo-mark.png.png',
         'logo-mark-with-wordmark-inverse.png.png',
@@ -404,35 +397,35 @@ While the present overall production value may be limited (as with most independ
         'logo-mark-inverse.png.png'
       ];
 
-      // Build candidate URL list helpers
-      function withDirs(names){
-        const out = [];
-        for (const name of names){
-          for (const dir of DIRS){
-            out.push(dir + name);
+      const photoCandidates = [];
+      for (const base of photoBases){
+        for (const dir of DIRS){
+          for (const ext of EXTS){
+            photoCandidates.push(dir + base + ext);
           }
         }
-        return out;
       }
-      function fromBases(bases){
-        const out = [];
-        for (const base of bases){
-          for (const dir of DIRS){
-            for (const ext of EXTS){
-              out.push(dir + base + ext);
-            }
-          }
+
+      const logoCandidates = [];
+      for (const name of [...normalLogoNames, ...oddLogoNames]){
+        for (const dir of DIRS){
+          logoCandidates.push(dir + name);
         }
-        return out;
       }
 
-      const photoCandidates = fromBases(photoBases);
-      const logoCandidates  = [
-        ...withDirs(normalLogoNames),
-        ...withDirs(explicitLogoNames)
-      ];
+      return { photoCandidates, logoCandidates };
+    }
 
-      // Loader
+    // Discover via <img> (cheap) and remember both paths and Image objects
+    (function buildPressCollage(){
+      const canvas = document.createElement('canvas');
+      const W = canvas.width = 1200;
+      const H = canvas.height = 675;
+      const ctx = canvas.getContext('2d');
+      const BUST = String(Math.floor(Date.now()/3600000));
+
+      const { photoCandidates, logoCandidates } = listCandidates();
+
       function load(path){
         return new Promise((resolve) => {
           const img = new Image();
@@ -449,20 +442,28 @@ While the present overall production value may be limited (as with most independ
       ]).then(results => {
         const photos = [];
         const logos  = [];
+        const photoPaths = [];
+        const logoPaths  = [];
 
         for (const r of results){
           if (!r.ok) continue;
-          const clean = r.path; // already unique by directory + filename
-          if (seen.has(clean)) continue;
-          seen.add(clean);
-
-          if (/press-(\d+)|press\d+/i.test(clean)) photos.push(r.img);
-          else logos.push(r.img);
+          if (seen.has(r.path)) continue;
+          seen.add(r.path);
+          if (/press-(\d+)|press\d+/i.test(r.path)){
+            photos.push(r.img); photoPaths.push(r.path);
+          } else {
+            logos.push(r.img); logoPaths.push(r.path);
+          }
         }
 
-        const selected = [...photos, ...logos].slice(0, 9);
+        // remember for ZIP
+        PRESS.paths.photos = photoPaths;
+        PRESS.paths.logos  = logoPaths;
+        PRESS.images.photos = photos;
+        PRESS.images.logos  = logos;
 
-        // Background
+        // draw collage
+        const selected = [...photos, ...logos].slice(0, 9);
         ctx.fillStyle = '#0b0c10';
         ctx.fillRect(0,0,W,H);
 
@@ -474,7 +475,6 @@ While the present overall production value may be limited (as with most independ
           return;
         }
 
-        // Grid geometry (up to 3x3)
         const cols = Math.min(3, Math.ceil(Math.sqrt(selected.length)));
         const rows = Math.min(3, Math.ceil(selected.length / cols));
         const pad  = 18;
@@ -492,7 +492,6 @@ While the present overall production value may be limited (as with most independ
           ctx.closePath();
           ctx.clip();
 
-          // object-fit: cover crop
           const arImg = img.width / img.height;
           const arCell = w / h;
           let sx=0, sy=0, sw=img.width, sh=img.height;
@@ -524,6 +523,94 @@ While the present overall production value may be limited (as with most independ
         document.getElementById('pressCollage').src = canvas.toDataURL('image/jpeg', 0.9);
       });
     })();
+
+    // ===========================
+    // Generate ZIP on click using JSZip (always up to date)
+    // ===========================
+    async function generatePressKitZip(){
+      const btn = document.getElementById('downloadZipBtn');
+      const collageLink = document.getElementById('collageLink');
+      const BUST = String(Math.floor(Date.now()/3600000));
+
+      const setBusy = (busy) => {
+        if (busy){
+          btn && (btn.textContent = 'Preparing…');
+          btn && (btn.style.opacity = '0.75');
+        } else {
+          btn && (btn.textContent = 'Download Press Kit (ZIP)');
+          btn && (btn.style.opacity = '1');
+        }
+      };
+
+      try{
+        setBusy(true);
+        const zip = new JSZip();
+        const added = new Set();
+
+        const allPaths = [...(PRESS.paths.photos||[]), ...(PRESS.paths.logos||[])];
+
+        // If nothing discovered yet (edge case), force a quick rescan via fetch list
+        if (allPaths.length === 0){
+          const { photoCandidates, logoCandidates } = listCandidates();
+          allPaths.push(...photoCandidates, ...logoCandidates);
+        }
+
+        // Fetch and add
+        for (const path of allPaths){
+          try{
+            const res = await fetch(path + `?v=${BUST}`, { cache: 'no-store' });
+            if (!res.ok) continue;
+            const blob = await res.blob();
+
+            const clean = path.replace(/^assets\//,''); // flatten assets/ in zip
+            const dot = clean.lastIndexOf('.');
+            const base = dot>0 ? clean.slice(0,dot) : clean;
+            const ext  = dot>0 ? clean.slice(dot) : '';
+
+            // ensure unique filename
+            let name = clean;
+            let n = 2;
+            while(added.has(name)){
+              name = `${base}-${n}${ext}`;
+              n++;
+            }
+            added.add(name);
+            zip.file(name, blob);
+          }catch(_e){}
+        }
+
+        // Nothing found? Bail gracefully
+        if (added.size === 0){
+          alert('No press assets found to package. Add files like press-01.jpg in the site root or /assets/.');
+          return;
+        }
+
+        const blobZip = await zip.generateAsync({ type: 'blob' });
+        const url = URL.createObjectURL(blobZip);
+
+        // trigger download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'press-kit.zip';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+          a.remove();
+        }, 4000);
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    document.getElementById('downloadZipBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      generatePressKitZip();
+    });
+    document.getElementById('collageLink')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      generatePressKitZip();
+    });
   </script>
 </body>
 </html>
