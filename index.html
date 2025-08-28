@@ -7,8 +7,9 @@
   <meta name="description" content="The Essence — cinematic rock/metal by Tim Pelzer. Listen, watch, press assets, and merch." />
   <!-- Preload the new background for faster Largest Contentful Paint -->
   <link rel="preload" as="image" href="assets/essence-bg-v2.webp" imagesrcset="assets/essence-bg-v2.webp 1200w, assets/essence-bg-v2.webp 2400w" />
-  <!-- Preload hero image used in the hero section -->
+  <!-- Preload hero image(s) in both likely locations -->
   <link rel="preload" as="image" href="hero.jpg" />
+  <link rel="preload" as="image" href="assets/hero.jpg" />
   <style>
     :root{
       --bg:#0b0c10;
@@ -124,20 +125,20 @@
     /* blurred edge fill underneath */
     .hero-bg::before{
       content:""; position:absolute; inset:-10%;
-      /* Use the requested hero.jpg image */
-      background:url('hero.jpg') center/cover no-repeat;
-      /* ensure no other source overrides this */
-      background-image: none;
+      /* Try root hero.jpg, then assets/hero.jpg */
+      background:
+        url('hero.jpg') center/cover no-repeat,
+        url('assets/hero.jpg') center/cover no-repeat;
       filter:blur(32px) brightness(.6);
       transform:scale(1.22);
     }
     /* main photo (no crop) with light blur to match your request */
     .hero-bg::after{
       content:""; position:absolute; inset:0;
-      /* Use the requested hero.jpg image */
-      background:url('hero.jpg') center center/contain no-repeat;
-      /* ensure no other source overrides this */
-      background-image: none;
+      /* Try root hero.jpg, then assets/hero.jpg */
+      background:
+        url('hero.jpg') center center/contain no-repeat,
+        url('assets/hero.jpg') center center/contain no-repeat;
       filter:blur(1.6px) contrast(1.05);
     }
     .hero-inner{position:relative; z-index:1; padding:40px}
@@ -519,3 +520,6 @@ While the present overall production value may be limited (as with most independ
   </script>
 </body>
 </html>
+
+</html>
+
