@@ -38,7 +38,12 @@
       border-bottom:1px solid var(--border);
     }
     .nav{display:flex;align-items:center;gap:16px}
-    .brand img{height:56px;width:auto}
+    /* Bigger, more noticeable word logo */
+    .brand img{
+      height:clamp(60px, 8vw, 96px);
+      width:auto;
+      filter:drop-shadow(0 2px 0 rgba(0,0,0,.5));
+    }
     .spacer{flex:1}
     .nav-links{display:flex;gap:14px;align-items:center}
     .nav-links a{padding:8px 10px;border-radius:10px}
