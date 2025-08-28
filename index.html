@@ -349,7 +349,12 @@ While the present overall production value may be limited (as with most independ
     });
 
     // ===========================
-    // Auto-generate Press Collage (photos first, then logos; de-dup; root + /assets; multi-ext; cache-bust)
+    // Auto-generate Press Collage
+    //  - Photos first, then logos
+    //  - Search in root and /assets/
+    //  - Try multiple extensions
+    //  - Include your newly uploaded names (even with double extensions/underscore)
+    //  - De-dup and cache-bust
     // ===========================
     (function buildPressCollage(){
       const canvas = document.createElement('canvas');
@@ -360,64 +365,97 @@ While the present overall production value may be limited (as with most independ
       // Cache-buster (hourly) to beat GH Pages cached 404s
       const BUST = String(Math.floor(Date.now()/3600000));
 
-      // Helpers to generate candidate URLs
-      const DIRS  = ['', 'assets/'];                      // search in root and /assets/
-      const EXTS  = ['.jpg','.jpeg','.png','.webp'];      // try common extensions
+      const DIRS  = ['', 'assets/'];                         // search in root and /assets/
+      const EXTS  = ['.jpg','.jpeg','.png','.webp'];         // try common extensions
 
+      // Photo patterns (press-01.jpg .. press-24.jpg + legacy press1.jpg ..)
       const photoBases = [
-        // Preferred numeric pattern
         ...Array.from({length:24}, (_,i)=>`press-${String(i+1).padStart(2,'0')}`),
-        // Legacy names you may already have
         'press1','press2','press3','press4','press5','press6'
       ];
 
-      const logoBases = [
-        'logo-wordmark','logo-wordmark-black','logo-wordmark-white-on-black-wide',
-        'logo-mark','logo-mark-alt','logo-mark-inverse',
-        'logo-mark-with-wordmark','logo-mark-with-wordmark-inverse','logo-mark-with-wordmark-inverse-on-black',
-        'logo-wordmark-alt'
+      // Normal/expected logo names (single extensions)
+      const normalLogoNames = [
+        'logo-wordmark.png',
+        'logo-wordmark-black.jpg',
+        'logo-wordmark-white-on-black-wide.jpg',
+        'logo-mark.jpg',
+        'logo-mark.png',
+        'logo-mark-alt.jpg',
+        'logo-mark-inverse.png',
+        'logo-mark-with-wordmark.jpg',
+        'logo-mark-with-wordmark.png',
+        'logo-mark-with-wordmark-inverse.png',
+        'logo-mark-with-wordmark-inverse-on-black.jpg',
+        'logo-wordmark-alt.png',
       ];
 
-      function urlsFor(bases){
+      // Your NEW uploaded filenames with double extensions / underscore / alt naming
+      const explicitLogoNames = [
+        'logo-wordmark-alt.png.png',
+        'logo_wordmark_black.jpg.jpg',
+        'logo-wordmark-white-on-black-wide.jpg.jpg',
+        'logo-mark-with-wordmark.jpg.jpg',
+        'logo-with-wordmark.png.png',                       // keep this exact typo so it loads
+        'logo-mark-alt.jpg.jpg',
+        'logo-mark.png.png',
+        'logo-mark-with-wordmark-inverse.png.png',
+        'logo-mark-with-wordmark-inverse-on-black.jpg.jpg',
+        'logo-mark-inverse.png.png'
+      ];
+
+      // Build candidate URL list helpers
+      function withDirs(names){
+        const out = [];
+        for (const name of names){
+          for (const dir of DIRS){
+            out.push(dir + name);
+          }
+        }
+        return out;
+      }
+      function fromBases(bases){
         const out = [];
         for (const base of bases){
           for (const dir of DIRS){
             for (const ext of EXTS){
-              const path = `${dir}${base}${ext}`;
-              out.push({ url: path + `?v=${BUST}`, tag: base });
+              out.push(dir + base + ext);
             }
           }
         }
         return out;
       }
 
-      const photoCandidates = urlsFor(photoBases);
-      const logoCandidates  = urlsFor(logoBases);
+      const photoCandidates = fromBases(photoBases);
+      const logoCandidates  = [
+        ...withDirs(normalLogoNames),
+        ...withDirs(explicitLogoNames)
+      ];
 
-      function load(candidate){
+      // Loader
+      function load(path){
         return new Promise((resolve) => {
           const img = new Image();
-          img.onload  = () => resolve({ ok:true, candidate, img });
-          img.onerror = () => resolve({ ok:false, candidate });
-          img.src = candidate.url;
+          img.onload  = () => resolve({ ok:true, path, img });
+          img.onerror = () => resolve({ ok:false, path });
+          img.src = path + `?v=${BUST}`;
         });
       }
 
-      // Load everything, de-dup by path-without-query
       const seen = new Set();
-      Promise.all([...photoCandidates.map(load), ...logoCandidates.map(load)]).then(results => {
-        const stripQ = s => s.split('?')[0];
-
+      Promise.all([
+        ...photoCandidates.map(load),
+        ...logoCandidates.map(load)
+      ]).then(results => {
         const photos = [];
         const logos  = [];
 
         for (const r of results){
           if (!r.ok) continue;
-          const clean = stripQ(r.candidate.url);
+          const clean = r.path; // already unique by directory + filename
           if (seen.has(clean)) continue;
           seen.add(clean);
 
-          // Heuristic: if path includes 'press-' or 'press<number>', treat as photo
           if (/press-(\d+)|press\d+/i.test(clean)) photos.push(r.img);
           else logos.push(r.img);
         }
@@ -454,6 +492,7 @@ While the present overall production value may be limited (as with most independ
           ctx.closePath();
           ctx.clip();
 
+          // object-fit: cover crop
           const arImg = img.width / img.height;
           const arCell = w / h;
           let sx=0, sy=0, sw=img.width, sh=img.height;
