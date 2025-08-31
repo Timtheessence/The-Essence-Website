@@ -135,7 +135,7 @@
     }
 
     .hero-inner{position:relative; z-index:1; padding:40px}
-    .hero h1{font-size:clamp(1.8rem,6vw,3.4rem); margin:0}
+    /* Removed the H1 per your request */
 
     /* ===========================
        Common UI: buttons, sections, cards, grids
@@ -145,6 +145,17 @@
     .cta{
       display:inline-block; padding:12px 18px; border-radius:999px;
       background:var(--accent); color:#0e0f14; font-weight:700; box-shadow:var(--shadow)
+    }
+
+    /* NEW: outline variant for the Entropy button */
+    .cta--outline{
+      background:transparent;
+      color:var(--accent);
+      border:2px solid var(--accent);
+      box-shadow:none;
+    }
+    .cta--outline:hover{
+      background:rgba(255,106,0,0.08);
     }
 
     .btn{
@@ -201,15 +212,17 @@
   <section class="hero" id="home" aria-label="Hero">
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-inner">
-      <h1>New music from The Essence</h1>
+      <!-- Removed: <h1>New music from The Essence</h1> -->
       <div class="row" style="justify-content:center;gap:18px;margin:18px 0 8px">
-        <a class="cta" href="https://artists.landr.com/990591880986" target="_blank" rel="noopener">Entropy — Listen Now</a>
+        <!-- Changed: outline style for Entropy button -->
+        <a class="cta cta--outline" href="https://artists.landr.com/990591880986" target="_blank" rel="noopener">Entropy — Listen Now</a>
         <a class="btn" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">Caverns — All Platforms</a>
         <a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
       </div>
       <div class="row" style="justify-content:center;gap:16px;margin-top:14px">
-        <img src="entropy-cover.png" alt="Entropy cover" style="height:120px;border-radius:10px;border:1px solid var(--border)">
-        <img src="caverns-cover.png" alt="Caverns cover" style="height:120px;border-radius:10px;border:1px solid var(--border)">
+        <!-- Changed: make covers a bit larger (150px) -->
+        <img src="entropy-cover.png" alt="Entropy cover" style="height:150px;border-radius:10px;border:1px solid var(--border)">
+        <img src="caverns-cover.png" alt="Caverns cover" style="height:150px;border-radius:10px;border:1px solid var(--border)">
       </div>
     </div>
   </section>
