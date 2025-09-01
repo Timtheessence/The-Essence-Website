@@ -425,11 +425,19 @@ While the present overall production value may be limited (as with most independ
   <script>
     // ===========================
     // Seamless loop controller: crossfade Video A -> Video B -> A -> ...
+    // Added: PLAYBACK_RATE to slow both videos.
     // ===========================
     const stack = document.getElementById('bgStack');
     const posterEl = document.getElementById('bgPoster');
     const vidA = document.getElementById('bgVidA');
     const vidB = document.getElementById('bgVidB');
+
+    // >>> Adjust this to control speed (1.0 = normal). e.g., 0.75 (25% slower), 0.6, 0.5, etc.
+    const PLAYBACK_RATE = 0.75;
+
+    // Apply the slower playback to both videos
+    vidA.playbackRate = PLAYBACK_RATE;
+    vidB.playbackRate = PLAYBACK_RATE;
 
     let active = vidA;
     let standby = vidB;
