@@ -8,9 +8,8 @@
 
   <!-- Preloads -->
   <link rel="preload" as="image" href="hero.jpg?v=4" />
-  <link rel="preload" as="image" href="site-bg-poster.jpg?v=3" />
-  <!-- Preload background video (hint; some browsers ignore this) -->
-  <link rel="preload" as="video" href="site-bg.mp4?v=3" type="video/mp4" />
+  <link rel="preload" as="image" href="site-bg-poster.jpg?v=5" />
+  <link rel="preload" as="video" href="site-bg.mp4?v=5" type="video/mp4" />
 
   <style>
     :root{
@@ -35,10 +34,10 @@
     }
 
     /* =========================================================
-       FIXED BACKGROUND STACK (poster image + video crossfade)
-       - Always shows poster first (even if video fails or is blocked/LFS)
-       - Crossfades to video once playing
-       - Stays fixed behind the whole page
+       FIXED BACKGROUND STACK (poster + two forward videos)
+       - Shows poster first
+       - Crossfades from Video A to Video B near the end
+       - Then from B back to A, forever (smooth loop)
        ========================================================= */
     .bg-stack{
       position:fixed;
@@ -63,11 +62,15 @@
       background:#0b0c10;
     }
     .bg-video{
-      opacity:0; /* hidden until we confirm playback */
-      transition:opacity 600ms ease;
+      opacity:0;
+      transition:opacity 700ms ease; /* crossfade duration */
     }
-    .bg-stack.is-playing .bg-video{ opacity:1; }
+    /* When any video is playing, fade the poster out */
     .bg-stack.is-playing .bg-poster{ opacity:0; }
+
+    /* Show the active track (A or B) */
+    .bg-stack.show-a .bg-video--a{ opacity:1; }
+    .bg-stack.show-b .bg-video--b{ opacity:1; }
 
     /* Page content wrapper sits above the background */
     .page{ position:relative; z-index:1; }
@@ -91,7 +94,7 @@
 
     .nav{display:flex;align-items:center;gap:16px}
 
-    /* Bigger wordmark in header (your previous change) */
+    /* Bigger wordmark in header */
     .brand img{
       height:clamp(60px, 8vw, 96px);
       width:auto;
@@ -124,7 +127,7 @@
     }
 
     /* ===========================
-       Hero (no blurred side fill; hero image over bg)
+       Hero (image over background, no blurred sides)
        =========================== */
     .hero{
       position:relative; min-height:56vh; display:grid; place-items:center; text-align:center;
@@ -147,7 +150,7 @@
       display:inline-block; padding:12px 18px; border-radius:999px;
       background:var(--accent); color:#0e0f14; font-weight:700; box-shadow:var(--shadow)
     }
-    /* Outline variant for the Entropy button (your recent edit) */
+    /* Outline variant for the Entropy button */
     .cta--outline{
       background:transparent;
       color:var(--accent);
@@ -185,21 +188,32 @@
 </head>
 
 <body>
-  <!-- Fixed background stack: poster shows first, video fades in when ready -->
+  <!-- Fixed background stack: poster + two forward videos for smooth crossfade loop -->
   <div class="bg-stack" id="bgStack" aria-hidden="true">
-    <img class="bg-poster" id="bgPoster" src="site-bg-poster.jpg?v=3" alt="">
+    <img class="bg-poster" id="bgPoster" src="site-bg-poster.jpg?v=5" alt="">
+    <!-- Video A -->
     <video
-      class="bg-video"
-      id="siteVideo"
+      class="bg-video bg-video--a"
+      id="bgVidA"
       playsinline
       muted
-      loop
-      autoplay
       preload="auto"
-      poster="site-bg-poster.jpg?v=3"
+      poster="site-bg-poster.jpg?v=5"
     >
-      <source src="site-bg.webm?v=3" type="video/webm" />
-      <source src="site-bg.mp4?v=3" type="video/mp4" />
+      <source src="site-bg.webm?v=5" type="video/webm" />
+      <source src="site-bg.mp4?v=5"  type="video/mp4"  />
+    </video>
+    <!-- Video B (same content as A) -->
+    <video
+      class="bg-video bg-video--b"
+      id="bgVidB"
+      playsinline
+      muted
+      preload="auto"
+      poster="site-bg-poster.jpg?v=5"
+    >
+      <source src="site-bg.webm?v=5" type="video/webm" />
+      <source src="site-bg.mp4?v=5"  type="video/mp4"  />
     </video>
   </div>
 
@@ -410,28 +424,89 @@ While the present overall production value may be limited (as with most independ
 
   <script>
     // ===========================
-    // Background video bootstrapping with graceful fallback
+    // Seamless loop controller: crossfade Video A -> Video B -> A -> ...
     // ===========================
     const stack = document.getElementById('bgStack');
     const posterEl = document.getElementById('bgPoster');
-    const vid = document.getElementById('siteVideo');
+    const vidA = document.getElementById('bgVidA');
+    const vidB = document.getElementById('bgVidB');
 
-    function markPlaying(){ stack.classList.add('is-playing'); }
-    function tryPlay(){ vid.play().catch(()=>{}); }
+    let active = vidA;
+    let standby = vidB;
+    let crossfading = false;
+    let fadeWindow = 0.8; // seconds before end to start crossfade (will be recalculated after metadata)
+    const FADE_MS = 700;
 
-    if (vid) {
-      // If the source 404s (e.g., LFS), 'error' fires and we simply keep the poster visible
-      vid.addEventListener('canplay', tryPlay);
-      vid.addEventListener('playing', markPlaying, { once:true });
-      vid.addEventListener('error', () => {
-        // stays on poster; open console if you want to see that it errored
-        console.warn('Background video failed to load. Poster will remain visible.');
-      });
-
-      // Nudge autoplay in some browsers
-      document.addEventListener('visibilitychange', tryPlay, { once:true });
-      window.addEventListener('pointerdown', tryPlay, { once:true });
+    function setShow(which){
+      if (which === vidA){
+        stack.classList.add('show-a');
+        stack.classList.remove('show-b');
+      } else {
+        stack.classList.add('show-b');
+        stack.classList.remove('show-a');
+      }
+      stack.classList.add('is-playing'); // hide poster when anything plays
     }
+
+    function prepareStandby(){
+      try { standby.currentTime = 0; } catch(e){}
+    }
+
+    function onTimeUpdate(){
+      if (crossfading) return;
+      const dur = active.duration || 0;
+      if (!isFinite(dur) || dur === 0) return;
+
+      const windowSec = fadeWindow || 0.8;
+      if (active.currentTime >= dur - windowSec){
+        crossfading = true;
+
+        // Start the standby video from the beginning and show it
+        prepareStandby();
+        standby.play().catch(()=>{});
+        setShow(standby);
+
+        // After fade, stop & reset the previous active, then swap
+        setTimeout(() => {
+          try { active.pause(); } catch(e){}
+          try { active.currentTime = 0; } catch(e){}
+          // swap roles
+          const tmp = active;
+          active = standby;
+          standby = tmp;
+          crossfading = false;
+        }, FADE_MS + 60);
+      }
+    }
+
+    function recalcFadeWindow(video){
+      const d = video.duration || 0;
+      if (!isFinite(d) || d === 0) return;
+      // crossfade ~10% of duration, clamped between 0.5s and 1.5s
+      fadeWindow = Math.min(1.5, Math.max(0.5, d * 0.10));
+    }
+
+    function startPlayback(){
+      // Recompute fade window based on actual duration
+      recalcFadeWindow(active);
+      setShow(active);
+      active.play().catch(()=>{});
+    }
+
+    // Attach listeners
+    vidA.addEventListener('timeupdate', onTimeUpdate);
+    vidB.addEventListener('timeupdate', onTimeUpdate);
+
+    vidA.addEventListener('loadedmetadata', () => { if (active === vidA) recalcFadeWindow(vidA); });
+    vidB.addEventListener('loadedmetadata', () => { if (active === vidB) recalcFadeWindow(vidB); });
+
+    // Kick off when A can play
+    vidA.addEventListener('canplay', startPlayback, { once:true });
+
+    // Nudge autoplay in some browsers
+    const tryKick = () => { active.play().catch(()=>{}); };
+    document.addEventListener('visibilitychange', tryKick, { once:true });
+    window.addEventListener('pointerdown', tryKick, { once:true });
 
     // ===========================
     // Mobile hamburger toggle + close on link click
