@@ -8,8 +8,8 @@
 
   <!-- Preloads -->
   <link rel="preload" as="image" href="hero.jpg?v=4" />
-  <!-- Prefer a higher-res Background@2x.* if present -->
-  <link rel="preload" as="image" href="Background.png?v=4" imagesrcset="Background@2x.png 2x, Background@2x.jpg 2x, Background.png 1x, Background.jpg 1x" />
+  <!-- Preload background video (browsers may treat this as a hint only) -->
+  <link rel="preload" as="video" href="site-bg.mp4?v=1" type="video/mp4" />
 
   <style>
     :root{
@@ -29,40 +29,25 @@
 
     body{
       font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:var(--bg);   /* solid fallback while image loads */
+      background:var(--bg);   /* solid fallback while video initializes */
       color:var(--ink);
     }
 
     /* =========================================================
-       SITE-WIDE PARALLAX BACKGROUND (behind all content)
-       - subtle movement
-       - clamped so it never scrolls away
-       - supports optional @2x high-res file
+       SITE-WIDE VIDEO BACKGROUND (behind all content)
+       - fixed (doesn't move with scroll)
+       - covers entire viewport
+       - muted+autoplay+playsinline for mobile support
        ========================================================= */
-    .site-parallax{
+    .site-video{
       position:fixed;
-      inset:-6%;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
       z-index:-5;
-      pointer-events:none;
-      background:
-        #0b0c10
-        image-set(
-          url('Background@2x.webp?v=4') type('image/webp') 2x,
-          url('Background@2x.png?v=4')  type('image/png')  2x,
-          url('Background@2x.jpg?v=4')  type('image/jpeg') 2x,
-          url('Background.webp?v=4')    type('image/webp') 1x,
-          url('Background.png?v=4')     type('image/png')  1x,
-          url('Background.jpg?v=4')     type('image/jpeg') 1x
-        )
-        center/cover no-repeat;
-
-      /* slight overscale ensures no edge gaps during parallax */
-      transform:translateY(0) scale(1.12);
-      will-change:transform;
-
-      /* keep it crisp */
-      image-rendering:auto;
-      filter:none;
+      pointer-events:none;   /* ignore clicks so content is interactive */
+      background:#0b0c10;   /* fallback behind the video */
     }
 
     img{max-width:100%;height:auto;display:block}
@@ -118,8 +103,8 @@
 
     /* ===========================
        Hero
-       - REMOVED blurred side fill
-       - hero image sits cleanly over site background
+       - no blurred side fill
+       - hero image sits cleanly over site background video
        =========================== */
     .hero{
       position:relative; min-height:56vh; display:grid; place-items:center; text-align:center;
@@ -127,7 +112,6 @@
     }
     .hero-bg{position:absolute; inset:0; overflow:hidden}
 
-    /* removed ::before (blurred filler) entirely */
     .hero-bg::after{
       content:""; position:absolute; inset:0;
       background:url('hero.jpg?v=4') center center/contain no-repeat;
@@ -135,7 +119,6 @@
     }
 
     .hero-inner{position:relative; z-index:1; padding:40px}
-    /* Removed the H1 per your request */
 
     /* ===========================
        Common UI: buttons, sections, cards, grids
@@ -147,7 +130,7 @@
       background:var(--accent); color:#0e0f14; font-weight:700; box-shadow:var(--shadow)
     }
 
-    /* NEW: outline variant for the Entropy button */
+    /* Outline variant for the Entropy button (from your last edit) */
     .cta--outline{
       background:transparent;
       color:var(--accent);
@@ -185,8 +168,21 @@
 </head>
 
 <body>
-  <!-- Parallax background layer -->
-  <div class="site-parallax" id="siteParallax" aria-hidden="true"></div>
+  <!-- Fixed video background (stays put while you scroll) -->
+  <video
+    class="site-video"
+    id="siteVideo"
+    playsinline
+    muted
+    loop
+    autoplay
+    preload="auto"
+    poster="site-bg-poster.jpg"
+  >
+    <!-- Optional WebM first, then MP4 -->
+    <source src="site-bg.webm?v=1" type="video/webm" />
+    <source src="site-bg.mp4?v=1" type="video/mp4" />
+  </video>
 
   <!-- Header (sticky) -->
   <header>
@@ -212,15 +208,13 @@
   <section class="hero" id="home" aria-label="Hero">
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="hero-inner">
-      <!-- Removed: <h1>New music from The Essence</h1> -->
+      <!-- H1 removed previously per your request -->
       <div class="row" style="justify-content:center;gap:18px;margin:18px 0 8px">
-        <!-- Changed: outline style for Entropy button -->
         <a class="cta cta--outline" href="https://artists.landr.com/990591880986" target="_blank" rel="noopener">Entropy — Listen Now</a>
         <a class="btn" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">Caverns — All Platforms</a>
         <a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
       </div>
       <div class="row" style="justify-content:center;gap:16px;margin-top:14px">
-        <!-- Changed: make covers a bit larger (150px) -->
         <img src="entropy-cover.png" alt="Entropy cover" style="height:150px;border-radius:10px;border:1px solid var(--border)">
         <img src="caverns-cover.png" alt="Caverns cover" style="height:150px;border-radius:10px;border:1px solid var(--border)">
       </div>
@@ -345,7 +339,7 @@ While the present overall production value may be limited (as with most independ
       <h2>Press</h2>
       <p class="lead">Click the collage to download the full press kit (ZIP). Add photos as <code>press-01.jpg</code>, <code>press-02.jpg</code>, …; the collage and ZIP update automatically. Logos are included after photos.</p>
 
-      <!-- Collage preview (auto-generated) that downloads the ZIP -->
+    <!-- Collage preview (auto-generated) that downloads the ZIP -->
       <a class="press-item" id="collageLink" href="#" download>
         <img id="pressCollage" src="" alt="Press kit collage — click to download ZIP" style="border-radius:16px;border:1px solid var(--border)">
       </a>
@@ -423,21 +417,6 @@ While the present overall production value may be limited (as with most independ
         }
       });
     });
-
-    // ===========================
-    // Subtle, clamped Parallax controller (background never "scrolls away")
-    // ===========================
-    const parallaxEl = document.getElementById('siteParallax');
-    function updateParallax(){
-      const y = window.pageYOffset || document.documentElement.scrollTop || 0;
-      const factor = 0.03;                      // very subtle movement
-      const maxShift = window.innerHeight * 0.10; // clamp movement
-      const shift = Math.max(-maxShift, Math.min(y * factor, maxShift));
-      parallaxEl.style.transform = `translateY(${shift}px) scale(1.12)`;
-    }
-    updateParallax();
-    window.addEventListener('scroll', updateParallax, { passive:true });
-    window.addEventListener('resize', updateParallax);
 
     // ===========================
     // PRESS: discover assets (root + /assets/), draw collage, build ZIP
