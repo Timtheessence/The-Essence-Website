@@ -137,7 +137,8 @@
     .hero-bg::after{
       content:""; position:absolute; inset:0;
       background:url('hero.jpg?v=4') center center/contain no-repeat;
-      filter:none;
+      /* Slight blur per your request */
+      filter:blur(2px) contrast(1.03);
     }
     .hero-inner{position:relative; z-index:1; padding:40px}
 
@@ -394,6 +395,21 @@ While the present overall production value may be limited (as with most independ
       </div>
     </section>
 
+    <!-- Newsletter (HubSpot) — added just above Contact -->
+    <section id="newsletter">
+      <div class="wrap">
+        <h2>Newsletter</h2>
+        <p class="lead">Sign up to get new music, videos, and updates from The Essence.</p>
+        <div class="card">
+          <div class="pad">
+            <!-- HubSpot embed (exactly as provided) -->
+            <script src="https://js-na3.hsforms.net/forms/embed/342376968.js" defer></script>
+            <div class="hs-form-frame" data-region="na3" data-form-id="d80b2576-093f-498d-8065-db5f9530882e" data-portal-id="342376968"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Contact -->
     <section id="contact">
       <div class="wrap">
@@ -425,14 +441,14 @@ While the present overall production value may be limited (as with most independ
   <script>
     // ===========================
     // Seamless loop controller: crossfade Video A -> Video B -> A -> ...
-    // Added: PLAYBACK_RATE to slow both videos.
+    // Added earlier: PLAYBACK_RATE to slow both videos.
     // ===========================
     const stack = document.getElementById('bgStack');
     const posterEl = document.getElementById('bgPoster');
     const vidA = document.getElementById('bgVidA');
     const vidB = document.getElementById('bgVidB');
 
-    // >>> Adjust this to control speed (1.0 = normal). e.g., 0.75 (25% slower), 0.6, 0.5, etc.
+    // Adjust this to control speed (1.0 = normal). e.g., 0.75 (25% slower), 0.6, 0.5, etc.
     const PLAYBACK_RATE = 0.75;
 
     // Apply the slower playback to both videos
