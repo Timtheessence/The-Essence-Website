@@ -94,11 +94,43 @@
 
     .nav{display:flex;align-items:center;gap:16px}
 
-    /* Bigger wordmark in header */
+    /* Bigger wordmark in header (fallback <img>) */
     .brand img{
       height:clamp(60px, 8vw, 96px);
       width:auto;
       filter:drop-shadow(0 2px 0 rgba(0,0,0,.5));
+    }
+
+    /* Metallic version using CSS mask (preferred) */
+    .brand .wordmark-metal{
+      display:none; /* hidden until masks supported */
+      height:clamp(60px, 8vw, 96px);
+      aspect-ratio: 5 / 1; /* adjust if looks off; keeps natural wide shape */
+      /* metallic gradient fill */
+      background:
+        linear-gradient(90deg,
+          #8e9298 0%,
+          #e5e8ec 20%,
+          #7b7f86 40%,
+          #f4f6f8 60%,
+          #8e9298 80%,
+          #d5d9de 100%);
+      filter:drop-shadow(0 2px 0 rgba(0,0,0,.5));
+      /* use your PNG as a mask to punch the letters out of the gradient */
+      -webkit-mask-image: url('logo-wordmark.png');
+              mask-image: url('logo-wordmark.png');
+      -webkit-mask-repeat: no-repeat;
+              mask-repeat: no-repeat;
+      -webkit-mask-size: contain;
+              mask-size: contain;
+      -webkit-mask-position: left center;
+              mask-position: left center;
+    }
+
+    /* Prefer the metallic masked version when supported */
+    @supports ((-webkit-mask-image: url("")) or (mask-image: url(""))){
+      .brand img{ display:none; }
+      .brand .wordmark-metal{ display:block; }
     }
 
     .spacer{flex:1}
@@ -127,7 +159,7 @@
     }
 
     /* ===========================
-       Hero (image over background, no blurred sides)
+       Hero (image over background, slight blur)
        =========================== */
     .hero{
       position:relative; min-height:56vh; display:grid; place-items:center; text-align:center;
@@ -224,6 +256,9 @@
     <header>
       <div class="wrap nav" id="nav">
         <a class="brand" href="#home" aria-label="Home">
+          <!-- Metallic wordmark using mask + gradient -->
+          <span class="wordmark-metal" role="img" aria-label="The Essence"></span>
+          <!-- Fallback image (shown if mask unsupported) -->
           <img src="logo-wordmark.png" alt="The Essence" />
         </a>
         <div class="spacer"></div>
@@ -395,7 +430,7 @@ While the present overall production value may be limited (as with most independ
       </div>
     </section>
 
-    <!-- Newsletter (HubSpot) — added just above Contact -->
+    <!-- Newsletter (HubSpot) — just above Contact -->
     <section id="newsletter">
       <div class="wrap">
         <h2>Newsletter</h2>
@@ -441,17 +476,14 @@ While the present overall production value may be limited (as with most independ
   <script>
     // ===========================
     // Seamless loop controller: crossfade Video A -> Video B -> A -> ...
-    // Added earlier: PLAYBACK_RATE to slow both videos.
+    // (with slower playback)
     // ===========================
     const stack = document.getElementById('bgStack');
     const posterEl = document.getElementById('bgPoster');
     const vidA = document.getElementById('bgVidA');
     const vidB = document.getElementById('bgVidB');
 
-    // Adjust this to control speed (1.0 = normal). e.g., 0.75 (25% slower), 0.6, 0.5, etc.
-    const PLAYBACK_RATE = 0.75;
-
-    // Apply the slower playback to both videos
+    const PLAYBACK_RATE = 0.75;  // slower playback
     vidA.playbackRate = PLAYBACK_RATE;
     vidB.playbackRate = PLAYBACK_RATE;
 
