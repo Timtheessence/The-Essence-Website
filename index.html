@@ -8,8 +8,9 @@
 
   <!-- Preloads -->
   <link rel="preload" as="image" href="hero.jpg?v=4" />
-  <!-- Preload background video (hint; may be ignored by some browsers) -->
-  <link rel="preload" as="video" href="site-bg.mp4?v=2" type="video/mp4" />
+  <link rel="preload" as="image" href="site-bg-poster.jpg?v=3" />
+  <!-- Preload background video (hint; some browsers ignore this) -->
+  <link rel="preload" as="video" href="site-bg.mp4?v=3" type="video/mp4" />
 
   <style>
     :root{
@@ -29,29 +30,46 @@
 
     body{
       font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:var(--bg);   /* solid fallback while video initializes */
+      background:var(--bg);   /* solid fallback */
       color:var(--ink);
     }
 
     /* =========================================================
-       SITE-WIDE VIDEO BACKGROUND (behind all content)
-       - fixed (doesn't move with scroll)
-       - covers entire viewport
-       - muted+autoplay+playsinline for mobile support
-       - z-index:0 so it paints ABOVE body background but BELOW page content
+       FIXED BACKGROUND STACK (poster image + video crossfade)
+       - Always shows poster first (even if video fails or is blocked/LFS)
+       - Crossfades to video once playing
+       - Stays fixed behind the whole page
        ========================================================= */
-    .site-video{
+    .bg-stack{
       position:fixed;
+      inset:0;
+      z-index:0;           /* above body background, below page content */
+      overflow:hidden;
+      background:#0b0c10;  /* behind poster/video just in case */
+      pointer-events:none; /* let clicks pass to content */
+    }
+    .bg-poster,
+    .bg-video{
+      position:absolute;
       inset:0;
       width:100%;
       height:100%;
       object-fit:cover;
-      z-index:0;
-      pointer-events:none;   /* ignore clicks so content is interactive */
-      background:#0b0c10;   /* fallback behind the video */
+      display:block;
     }
+    .bg-poster{
+      opacity:1;
+      transition:opacity 600ms ease;
+      background:#0b0c10;
+    }
+    .bg-video{
+      opacity:0; /* hidden until we confirm playback */
+      transition:opacity 600ms ease;
+    }
+    .bg-stack.is-playing .bg-video{ opacity:1; }
+    .bg-stack.is-playing .bg-poster{ opacity:0; }
 
-    /* Page content wrapper sits above the background video */
+    /* Page content wrapper sits above the background */
     .page{ position:relative; z-index:1; }
 
     img{max-width:100%;height:auto;display:block}
@@ -73,7 +91,7 @@
 
     .nav{display:flex;align-items:center;gap:16px}
 
-    /* Bigger wordmark in header */
+    /* Bigger wordmark in header (your previous change) */
     .brand img{
       height:clamp(60px, 8vw, 96px);
       width:auto;
@@ -106,26 +124,22 @@
     }
 
     /* ===========================
-       Hero
-       - no blurred side fill
-       - hero image sits cleanly over site background video
+       Hero (no blurred side fill; hero image over bg)
        =========================== */
     .hero{
       position:relative; min-height:56vh; display:grid; place-items:center; text-align:center;
       border-bottom:1px solid var(--border); overflow:hidden;
     }
     .hero-bg{position:absolute; inset:0; overflow:hidden}
-
     .hero-bg::after{
       content:""; position:absolute; inset:0;
       background:url('hero.jpg?v=4') center center/contain no-repeat;
       filter:none;
     }
-
     .hero-inner{position:relative; z-index:1; padding:40px}
 
     /* ===========================
-       Common UI: buttons, sections, cards, grids
+       Common UI
        =========================== */
     .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
@@ -133,8 +147,7 @@
       display:inline-block; padding:12px 18px; border-radius:999px;
       background:var(--accent); color:#0e0f14; font-weight:700; box-shadow:var(--shadow)
     }
-
-    /* Outline variant for the Entropy button */
+    /* Outline variant for the Entropy button (your recent edit) */
     .cta--outline{
       background:transparent;
       color:var(--accent);
@@ -172,29 +185,30 @@
 </head>
 
 <body>
-  <!-- Fixed video background (stays put while you scroll) -->
-  <video
-    class="site-video"
-    id="siteVideo"
-    playsinline
-    muted
-    loop
-    autoplay
-    preload="auto"
-    poster="site-bg-poster.jpg"
-  >
-    <!-- Optional WebM first, then MP4 -->
-    <source src="site-bg.webm?v=2" type="video/webm" />
-    <source src="site-bg.mp4?v=2" type="video/mp4" />
-  </video>
+  <!-- Fixed background stack: poster shows first, video fades in when ready -->
+  <div class="bg-stack" id="bgStack" aria-hidden="true">
+    <img class="bg-poster" id="bgPoster" src="site-bg-poster.jpg?v=3" alt="">
+    <video
+      class="bg-video"
+      id="siteVideo"
+      playsinline
+      muted
+      loop
+      autoplay
+      preload="auto"
+      poster="site-bg-poster.jpg?v=3"
+    >
+      <source src="site-bg.webm?v=3" type="video/webm" />
+      <source src="site-bg.mp4?v=3" type="video/mp4" />
+    </video>
+  </div>
 
-  <!-- Page content wrapper sits above the background video -->
+  <!-- Page content above the background -->
   <div class="page">
     <!-- Header (sticky) -->
     <header>
       <div class="wrap nav" id="nav">
         <a class="brand" href="#home" aria-label="Home">
-          <!-- Wordmark only -->
           <img src="logo-wordmark.png" alt="The Essence" />
         </a>
         <div class="spacer"></div>
@@ -214,7 +228,6 @@
     <section class="hero" id="home" aria-label="Hero">
       <div class="hero-bg" aria-hidden="true"></div>
       <div class="hero-inner">
-        <!-- H1 removed previously per your request -->
         <div class="row" style="justify-content:center;gap:18px;margin:18px 0 8px">
           <a class="cta cta--outline" href="https://artists.landr.com/990591880986" target="_blank" rel="noopener">Entropy — Listen Now</a>
           <a class="btn" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">Caverns — All Platforms</a>
@@ -327,10 +340,10 @@
         <div class="media-grid">
           <div>
             <p class="lead">About The Essence<br><br>
-  Tim Pelzer is a multi instrumentalist who resides just outside of Calgary Alberta, Canada. The Essence is a passion project he started in 2019 out of a desire to see the production of more quality, Christian music that challenges and edifies the listener. "Cliché or compromise" have long been the predominant options within Christian art, and Tim wants to be a part of the recent tide of change that seems to be occurring.<br><br>
-  There is a prevailing narrative in the Christian Music Industry that in order for Christian music to find success, the "Christian" element must be watered down, or follow the same cookie cutter templates that have already been tried. This may be true... if the sole pursuit is success in the eyes of the large record labels. But what would happen if more Christian artists sought to create music with the primary purpose of honoring Christ, a secondary purpose of achieving quality and exceptionalism, and a tertiary purpose of finding success? Would we find that uncompromising biblical messaging actually resonates with more people than we think? Is there a "void" in the music industry waiting to be filled?<br><br>
-  A combination of a love for the Word of God, some challenging life experiences, and a taste for hard hitting, cinematic rock/metal are what have shaped the sound of The Essence. Sonic influences include legendary powerhouses such as Red, Skillet, Chevelle, Muse, Starset, Disciple, Love and Death, Silent Planet, and of course, Hans Zimmer. "Caverns" Is The Essence's debut album, comprised of songs Tim has written over the past 6 years which stem from his intense pursuit of purpose.<br><br>
-  While the present overall production value may be limited (as with most independent artists starting out),  Tim has a vision for where this music could someday go as he grows in his knowledge and resources within the realm of music production. There is no room for filler tracks in The Essence's discography. If a track makes it into the public space, it's because it has been poured over with intentionality and refined with scrutiny. Whether it's a hit, or a flop, you can be confident no track will ever lack effort. All this to create hard hitting rock with a hard hitting message.</p>
+Tim Pelzer is a multi instrumentalist who resides just outside of Calgary Alberta, Canada. The Essence is a passion project he started in 2019 out of a desire to see the production of more quality, Christian music that challenges and edifies the listener. "Cliché or compromise" have long been the predominant options within Christian art, and Tim wants to be a part of the recent tide of change that seems to be occurring.<br><br>
+There is a prevailing narrative in the Christian Music Industry that in order for Christian music to find success, the "Christian" element must be watered down, or follow the same cookie cutter templates that have already been tried. This may be true... if the sole pursuit is success in the eyes of the large record labels. But what would happen if more Christian artists sought to create music with the primary purpose of honoring Christ, a secondary purpose of achieving quality and exceptionalism, and a tertiary purpose of finding success? Would we find that uncompromising biblical messaging actually resonates with more people than we think? Is there a "void" in the music industry waiting to be filled?<br><br>
+A combination of a love for the Word of God, some challenging life experiences, and a taste for hard hitting, cinematic rock/metal are what have shaped the sound of The Essence. Sonic influences include legendary powerhouses such as Red, Skillet, Chevelle, Muse, Starset, Disciple, Love and Death, Silent Planet, and of course, Hans Zimmer. "Caverns" Is The Essence's debut album, comprised of songs Tim has written over the past 6 years which stem from his intense pursuit of purpose.<br><br>
+While the present overall production value may be limited (as with most independent artists starting out),  Tim has a vision for where this music could someday go as he grows in his knowledge and resources within the realm of music production. There is no room for filler tracks in The Essence's discography. If a track makes it into the public space, it's because it has been poured over with intentionality and refined with scrutiny. Whether it's a hit, or a flop, you can be confident no track will ever lack effort. All this to create hard hitting rock with a hard hitting message.</p>
           </div>
           <div>
             <img src="press1.jpg" alt="Tim Pelzer portrait" style="border-radius:14px;border:1px solid var(--border)">
@@ -397,11 +410,25 @@
 
   <script>
     // ===========================
-    // Kick the video in case autoplay is deferred by the browser
+    // Background video bootstrapping with graceful fallback
     // ===========================
-    const bgVid = document.getElementById('siteVideo');
-    if (bgVid) {
-      const tryPlay = () => bgVid.play().catch(()=>{});
+    const stack = document.getElementById('bgStack');
+    const posterEl = document.getElementById('bgPoster');
+    const vid = document.getElementById('siteVideo');
+
+    function markPlaying(){ stack.classList.add('is-playing'); }
+    function tryPlay(){ vid.play().catch(()=>{}); }
+
+    if (vid) {
+      // If the source 404s (e.g., LFS), 'error' fires and we simply keep the poster visible
+      vid.addEventListener('canplay', tryPlay);
+      vid.addEventListener('playing', markPlaying, { once:true });
+      vid.addEventListener('error', () => {
+        // stays on poster; open console if you want to see that it errored
+        console.warn('Background video failed to load. Poster will remain visible.');
+      });
+
+      // Nudge autoplay in some browsers
       document.addEventListener('visibilitychange', tryPlay, { once:true });
       window.addEventListener('pointerdown', tryPlay, { once:true });
     }
@@ -464,7 +491,7 @@
         'logo-wordmark-alt.png'
       ];
 
-      /* legacy double-extension variants, left in case any still exist */
+      /* legacy double-extension variants (in case any linger) */
       const oddLogoNames = [
         'logo-wordmark-alt.png.png',
         'logo_wordmark_black.jpg.jpg',
