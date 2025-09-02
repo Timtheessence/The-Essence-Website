@@ -159,7 +159,7 @@
     }
 
     /* ===========================
-       Hero (image over background, slight blur)
+       Hero (image over background, slight blur + slight transparency)
        =========================== */
     .hero{
       position:relative; min-height:56vh; display:grid; place-items:center; text-align:center;
@@ -169,14 +169,15 @@
     .hero-bg::after{
       content:""; position:absolute; inset:0;
       background:url('hero.jpg?v=4') center center/contain no-repeat;
-      /* Slight blur per your request */
+      /* Slight blur and slight transparency */
       filter:blur(2px) contrast(1.03);
+      opacity:0.85;
     }
     .hero-inner{position:relative; z-index:1; padding:40px}
 
     /* ===========================
-       Common UI
-       =========================== */
+      Common UI
+      =========================== */
     .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
     .cta{
