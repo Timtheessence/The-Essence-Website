@@ -154,7 +154,7 @@
 
     @media (max-width: 820px){
       .nav{
-        flex-wrap: wrap; /* NEW: ensures the menu wraps below logo/burger instead of going off-screen */
+        flex-wrap: wrap; /* ensures the menu wraps below logo/burger instead of going off-screen */
       }
       .nav-links{display:none; width:100%; flex-direction:column; align-items:flex-start; padding-top:12px}
       .nav.open .nav-links{display:flex}
@@ -162,7 +162,7 @@
     }
 
     /* ===========================
-       Hero (image over background, slight blur + slight transparency)
+       Hero (layout only; image layer omitted)
        =========================== */
     .hero{
       position:relative; min-height:56vh; display:grid; place-items:center; text-align:center;
@@ -172,7 +172,6 @@
     .hero-bg::after{
       content:""; position:absolute; inset:0;
       background:url('hero.jpg?v=4') center center/contain no-repeat;
-      /* Slight blur and slight transparency */
       filter:blur(2px) contrast(1.03);
       opacity:0.85;
     }
@@ -280,7 +279,7 @@
 
     <!-- Hero -->
     <section class="hero" id="home" aria-label="Hero">
-      <div class="hero-bg" aria-hidden="true"></div>
+      <!-- hero-bg DIV intentionally removed -->
       <div class="hero-inner">
         <div class="row" style="justify-content:center;gap:18px;margin:18px 0 8px">
           <a class="cta cta--outline" href="https://artists.landr.com/990591880986" target="_blank" rel="noopener">Entropy — Listen Now</a>
@@ -573,7 +572,7 @@ While the present overall production value may be limited (as with most independ
     // ===========================
     const nav = document.getElementById('nav');
     const burger = document.getElementById('burger');
-    const links = document.getElementById('nav-links');
+    the links = document.getElementById('nav-links');
 
     const toggleNav = () => nav.classList.toggle('open');
     burger.addEventListener('click', toggleNav);
@@ -850,4 +849,3 @@ While the present overall production value may be limited (as with most independ
   </script>
 </body>
 </html>
-
