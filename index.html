@@ -6,6 +6,27 @@
   <title>The Essence | Official Site</title>
   <meta name="description" content="The Essence — cinematic rock/metal by Tim Pelzer. Listen, watch, press assets, and merch." />
 
+  <!-- Canonical for your custom domain -->
+  <link rel="canonical" href="https://theessenceofficial.com/" />
+
+  <!-- Structured data (helps Google understand the site) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicGroup",
+    "name": "The Essence",
+    "url": "https://theessenceofficial.com/",
+    "foundingLocation": "Calgary, AB, Canada",
+    "genre": ["Cinematic Rock", "Metal"],
+    "member": [{"@type": "Person", "name": "Tim Pelzer"}],
+    "sameAs": [
+      "https://www.youtube.com/@theessence7391",
+      "https://www.instagram.com/the_essence_band/",
+      "https://www.facebook.com/TTheEssence/"
+    ]
+  }
+  </script>
+
   <!-- Preloads -->
   <link rel="preload" as="image" href="hero.jpg?v=4" />
   <link rel="preload" as="image" href="site-bg-poster.jpg?v=5" />
@@ -29,23 +50,20 @@
 
     body{
       font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:var(--bg);   /* solid fallback */
+      background:var(--bg);
       color:var(--ink);
     }
 
     /* =========================================================
        FIXED BACKGROUND STACK (poster + two forward videos)
-       - Shows poster first
-       - Crossfades from Video A to Video B near the end
-       - Then from B back to A, forever (smooth loop)
        ========================================================= */
     .bg-stack{
       position:fixed;
       inset:0;
-      z-index:0;           /* above body background, below page content */
+      z-index:0;
       overflow:hidden;
-      background:#0b0c10;  /* behind poster/video just in case */
-      pointer-events:none; /* let clicks pass to content */
+      background:#0b0c10;
+      pointer-events:none;
     }
     .bg-poster,
     .bg-video{
@@ -63,16 +81,12 @@
     }
     .bg-video{
       opacity:0;
-      transition:opacity 700ms ease; /* crossfade duration */
+      transition:opacity 700ms ease;
     }
-    /* When any video is playing, fade the poster out */
     .bg-stack.is-playing .bg-poster{ opacity:0; }
-
-    /* Show the active track (A or B) */
     .bg-stack.show-a .bg-video--a{ opacity:1; }
     .bg-stack.show-b .bg-video--b{ opacity:1; }
 
-    /* Page content wrapper sits above the background */
     .page{ position:relative; z-index:1; }
 
     img{max-width:100%;height:auto;display:block}
@@ -103,10 +117,9 @@
 
     /* Metallic version using CSS mask (preferred) */
     .brand .wordmark-metal{
-      display:none; /* hidden until masks supported */
+      display:none;
       height:clamp(60px, 8vw, 96px);
-      aspect-ratio: 5 / 1; /* adjust if looks off; keeps natural wide shape */
-      /* metallic gradient fill */
+      aspect-ratio: 5 / 1;
       background:
         linear-gradient(90deg,
           #8e9298 0%,
@@ -116,7 +129,6 @@
           #8e9298 80%,
           #d5d9de 100%);
       filter:drop-shadow(0 2px 0 rgba(0,0,0,.5));
-      /* use your PNG as a mask to punch the letters out of the gradient */
       -webkit-mask-image: url('logo-wordmark.png');
               mask-image: url('logo-wordmark.png');
       -webkit-mask-repeat: no-repeat;
@@ -127,7 +139,6 @@
               mask-position: left center;
     }
 
-    /* Prefer the metallic masked version when supported */
     @supports ((-webkit-mask-image: url("")) or (mask-image: url(""))){
       .brand img{ display:none; }
       .brand .wordmark-metal{ display:block; }
@@ -186,7 +197,6 @@
       display:inline-block; padding:12px 18px; border-radius:999px;
       background:var(--accent); color:#0e0f14; font-weight:700; box-shadow:var(--shadow)
     }
-    /* Outline variant for the Entropy button */
     .cta--outline{
       background:transparent;
       color:var(--accent);
@@ -259,9 +269,7 @@
     <header>
       <div class="wrap nav" id="nav">
         <a class="brand" href="#home" aria-label="Home">
-          <!-- Metallic wordmark using mask + gradient -->
           <span class="wordmark-metal" role="img" aria-label="The Essence"></span>
-          <!-- Fallback image (shown if mask unsupported) -->
           <img src="logo-wordmark.png" alt="The Essence" />
         </a>
         <div class="spacer"></div>
@@ -546,23 +554,19 @@ While the present overall production value may be limited (as with most independ
     }
 
     function startPlayback(){
-      // Recompute fade window based on actual duration
       recalcFadeWindow(active);
       setShow(active);
       active.play().catch(()=>{});
     }
 
-    // Attach listeners
     vidA.addEventListener('timeupdate', onTimeUpdate);
     vidB.addEventListener('timeupdate', onTimeUpdate);
 
     vidA.addEventListener('loadedmetadata', () => { if (active === vidA) recalcFadeWindow(vidA); });
     vidB.addEventListener('loadedmetadata', () => { if (active === vidB) recalcFadeWindow(vidB); });
 
-    // Kick off when A can play
     vidA.addEventListener('canplay', startPlayback, { once:true });
 
-    // Nudge autoplay in some browsers
     const tryKick = () => { active.play().catch(()=>{}); };
     document.addEventListener('visibilitychange', tryKick, { once:true });
     window.addEventListener('pointerdown', tryKick, { once:true });
@@ -625,7 +629,6 @@ While the present overall production value may be limited (as with most independ
         'logo-wordmark-alt.png'
       ];
 
-      /* legacy double-extension variants (in case any linger) */
       const oddLogoNames = [
         'logo-wordmark-alt.png.png',
         'logo_wordmark_black.jpg.jpg',
@@ -663,7 +666,7 @@ While the present overall production value may be limited (as with most independ
       const W = canvas.width = 1200;
       const H = canvas.height = 675;
       const ctx = canvas.getContext('2d');
-      const BUST = String(Math.floor(Date.now()/3600000)); // hourly cache bust
+      const BUST = String(Math.floor(Date.now()/3600000));
 
       const { photoCandidates, logoCandidates } = listCandidates();
 
@@ -702,7 +705,7 @@ While the present overall production value may be limited (as with most independ
         PRESS.images.photos = photos;
         PRESS.images.logos  = logos;
 
-        // Draw collage
+        // Draw collage (9 tiles max)
         const selected = [...photos, ...logos].slice(0, 9);
         ctx.fillStyle = '#0b0c10';
         ctx.fillRect(0,0,W,H);
