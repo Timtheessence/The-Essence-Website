@@ -222,7 +222,15 @@
 
     .media-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px}
 
-    .store-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px}
+    .store-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:16px;
+    }
+    /* Force 5 columns on wide screens so all five products sit on one row */
+    @media (min-width: 1080px){
+      .store-grid{ grid-template-columns: repeat(5, 1fr); }
+    }
     .price{color:var(--ink); font-weight:700}
 
     .press-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px}
@@ -233,6 +241,7 @@
     .tag{font-size:.85rem; padding:6px 10px; border:1px solid var(--border); border-radius:999px; color:var(--muted)}
 
     /* ===== Store gallery (slideshow) ===== */
+    /* Hide gallery by default; only show when images have loaded */
     .product-gallery{
       position:relative;
       width:100%;
@@ -240,7 +249,9 @@
       overflow:hidden;
       background:#0e1117;
       border-bottom:1px solid var(--border);
+      display:none;         /* hidden until ready */
     }
+    .product-gallery.ready{ display:block; }
     .product-gallery img{
       position:absolute; inset:0;
       width:100%; height:100%; object-fit:cover;
@@ -379,7 +390,26 @@
       </div>
     </section>
 
-    <!-- Store (replaced with 5 PayPal products + clickable galleries) -->
+    <!-- About -->
+    <section id="about">
+      <div class="wrap">
+        <h2>About The Essence</h2>
+        <div class="media-grid">
+          <div>
+            <p class="lead">About The Essence<br><br>
+Tim Pelzer is a multi instrumentalist who resides just outside of Calgary Alberta, Canada. The Essence is a passion project he started in 2019 out of a desire to see the production of more quality, Christian music that challenges and edifies the listener. "Cliché or compromise" have long been the predominant options within Christian art, and Tim wants to be a part of the recent tide of change that seems to be occurring.<br><br>
+There is a prevailing narrative in the Christian Music Industry that in order for Christian music to find success, the "Christian" element must be watered down, or follow the same cookie cutter templates that have already been tried. This may be true... if the sole pursuit is success in the eyes of the large record labels. But what would happen if more Christian artists sought to create music with the primary purpose of honoring Christ, a secondary purpose of achieving quality and exceptionalism, and a tertiary purpose of finding success? Would we find that uncompromising biblical messaging actually resonates with more people than we think? Is there a "void" in the music industry waiting to be filled?<br><br>
+A combination of a love for the Word of God, some challenging life experiences, and a taste for hard hitting, cinematic rock/metal are what have shaped the sound of The Essence. Sonic influences include legendary powerhouses such as Red, Skillet, Chevelle, Muse, Starset, Disciple, Love and Death, Silent Planet, and of course, Hans Zimmer. "Caverns" Is The Essence's debut album, comprised of songs Tim has written over the past 6 years which stem from his intense pursuit of purpose.<br><br>
+While the present overall production value may be limited (as with most independent artists starting out),  Tim has a vision for where this music could someday go as he grows in his knowledge and resources within the realm of music production. There is no room for filler tracks in The Essence's discography. If a track makes it into the public space, it's because it has been poured over with intentionality and refined with scrutiny. Whether it's a hit, or a flop, you can be confident no track will ever lack effort. All this to create hard hitting rock with a hard hitting message.</p>
+          </div>
+          <div>
+            <img src="press1.jpg" alt="Tim Pelzer portrait" style="border-radius:14px;border:1px solid var(--border)">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Store (moved below About) -->
     <section id="store">
       <div class="wrap">
         <h2>Store</h2>
@@ -399,7 +429,7 @@
             </div>
           </article>
 
-          <!-- 2) White T-Shirt -->
+          <!-- 2) White T-Shirt (updated PayPal code) -->
           <article class="card">
             <div class="product-gallery" data-images="assets/product-white-tee-01.jpg,assets/product-white-tee-02.jpg,assets/product-white-tee-03.jpg" aria-label="The Essence White T-Shirt gallery">
               <a class="gallery-link" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SAGFPKDKK2KQY" target="_blank" rel="noopener" aria-label="Buy The Essence White T-Shirt on PayPal"></a>
@@ -447,25 +477,6 @@
             </div>
           </article>
 
-        </div>
-      </div>
-    </section>
-
-    <!-- About -->
-    <section id="about">
-      <div class="wrap">
-        <h2>About The Essence</h2>
-        <div class="media-grid">
-          <div>
-            <p class="lead">About The Essence<br><br>
-Tim Pelzer is a multi instrumentalist who resides just outside of Calgary Alberta, Canada. The Essence is a passion project he started in 2019 out of a desire to see the production of more quality, Christian music that challenges and edifies the listener. "Cliché or compromise" have long been the predominant options within Christian art, and Tim wants to be a part of the recent tide of change that seems to be occurring.<br><br>
-There is a prevailing narrative in the Christian Music Industry that in order for Christian music to find success, the "Christian" element must be watered down, or follow the same cookie cutter templates that have already been tried. This may be true... if the sole pursuit is success in the eyes of the large record labels. But what would happen if more Christian artists sought to create music with the primary purpose of honoring Christ, a secondary purpose of achieving quality and exceptionalism, and a tertiary purpose of finding success? Would we find that uncompromising biblical messaging actually resonates with more people than we think? Is there a "void" in the music industry waiting to be filled?<br><br>
-A combination of a love for the Word of God, some challenging life experiences, and a taste for hard hitting, cinematic rock/metal are what have shaped the sound of The Essence. Sonic influences include legendary powerhouses such as Red, Skillet, Chevelle, Muse, Starset, Disciple, Love and Death, Silent Planet, and of course, Hans Zimmer. "Caverns" Is The Essence's debut album, comprised of songs Tim has written over the past 6 years which stem from his intense pursuit of purpose.<br><br>
-While the present overall production value may be limited (as with most independent artists starting out),  Tim has a vision for where this music could someday go as he grows in his knowledge and resources within the realm of music production. There is no room for filler tracks in The Essence's discography. If a track makes it into the public space, it's because it has been poured over with intentionality and refined with scrutiny. Whether it's a hit, or a flop, you can be confident no track will ever lack effort. All this to create hard hitting rock with a hard hitting message.</p>
-          </div>
-          <div>
-            <img src="press1.jpg" alt="Tim Pelzer portrait" style="border-radius:14px;border:1px solid var(--border)">
-          </div>
         </div>
       </div>
     </section>
@@ -917,6 +928,7 @@ While the present overall production value may be limited (as with most independ
 
     // ===========================
     // Simple gallery rotator (every ~5s) for elements with data-images
+    // Show gallery ONLY if at least one image loads, else hide container
     // ===========================
     (function initGalleries(){
       const SPEED = 5000; // 5 seconds
@@ -925,27 +937,40 @@ While the present overall production value may be limited (as with most independ
           .split(',')
           .map(s => s.trim())
           .filter(Boolean);
+        if (list.length === 0){ gal.style.display='none'; return; }
 
-        if (list.length === 0) return;
-
-        // create <img> stack
-        const imgs = list.map((src, i) => {
+        // Preload and keep only images that successfully load
+        const loaders = list.map(src => new Promise(resolve => {
           const im = new Image();
+          im.onload = () => resolve({ok:true, img:im});
+          im.onerror = () => resolve({ok:false});
           im.src = src;
           im.alt = '';
-          if (i === 0) im.classList.add('active');
-          gal.appendChild(im);
-          return im;
+        }));
+
+        Promise.all(loaders).then(items => {
+          const imgs = items.filter(x => x.ok).map(x => x.img);
+          if (imgs.length === 0){
+            gal.style.display = 'none';
+            return;
+          }
+
+          // Append and start rotation
+          imgs.forEach((im, i) => {
+            if (i === 0) im.classList.add('active');
+            gal.appendChild(im);
+          });
+          gal.classList.add('ready');
+
+          if (imgs.length < 2) return;
+
+          let idx = 0;
+          setInterval(() => {
+            imgs[idx].classList.remove('active');
+            idx = (idx + 1) % imgs.length;
+            imgs[idx].classList.add('active');
+          }, SPEED);
         });
-
-        if (imgs.length < 2) return; // no rotation needed
-
-        let idx = 0;
-        setInterval(() => {
-          imgs[idx].classList.remove('active');
-          idx = (idx + 1) % imgs.length;
-          imgs[idx].classList.add('active');
-        }, SPEED);
       });
     })();
   </script>
