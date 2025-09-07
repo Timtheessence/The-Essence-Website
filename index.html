@@ -290,6 +290,22 @@
       position:absolute; inset:0; display:block;
       /* Click anywhere on the image to open PayPal in new tab */
     }
+
+    /* Support (Buy Me A Coffee) */
+    .support-card{
+      display:flex; align-items:center; gap:14px;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:16px 18px; box-shadow:var(--shadow);
+      max-width:560px;
+    }
+    .bmc-icon{
+      width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center;
+      border:1px solid var(--accent2); border-radius:10px; color:var(--accent2);
+      background:transparent;
+    }
+    .bmc-icon svg{ width:22px; height:22px; stroke:currentColor; stroke-width:1.8; fill:none; }
+    .support-card a.btn{ border-color:var(--accent2); }
+    .support-card a.btn:hover{ background:rgba(76,177,255,.08); }
   </style>
 </head>
 
@@ -335,7 +351,7 @@
 
         <div class="spacer"></div>
 
-        <!-- NEW: Social icons -->
+        <!-- Social icons -->
         <div class="social-icons" aria-label="Social links">
           <!-- YouTube -->
           <a href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener" aria-label="YouTube">
@@ -366,7 +382,7 @@
         <nav class="nav-links" id="nav-links" aria-label="Primary">
           <a href="#music">Music</a>
           <a href="#video">Video</a>
-          <a href="#store">Store</a>
+          <a href="#store">Store/Support</a>
           <a href="#about">About</a>
           <a href="#press">Press</a>
           <a href="#newsletter">Newsletter</a>
@@ -483,6 +499,11 @@ While the present overall production value may be limited (as with most independ
               <h3 style="margin:0 0 6px">The Essence Black T-Shirt</h3>
               <p class="price">From $34.99 CAD</p>
               <div id="paypal-container-UJFWA9QEZWQ7A"></div>
+              <script>
+                paypal.HostedButtons({
+                  hostedButtonId: "UJFWA9QEZWQ7A",
+                }).render("#paypal-container-UJFWA9QEZWQ7A");
+              </script>
             </div>
           </article>
 
@@ -495,6 +516,11 @@ While the present overall production value may be limited (as with most independ
               <h3 style="margin:0 0 6px">The Essence White T-Shirt</h3>
               <p class="price">From $34.99 CAD</p>
               <div id="paypal-container-SAGFPKDKK2KQY"></div>
+              <script>
+                paypal.HostedButtons({
+                  hostedButtonId: "SAGFPKDKK2KQY",
+                }).render("#paypal-container-SAGFPKDKK2KQY");
+              </script>
             </div>
           </article>
 
@@ -507,6 +533,11 @@ While the present overall production value may be limited (as with most independ
               <h3 style="margin:0 0 6px">DTTC White 15oz Ceramic Mug</h3>
               <p class="price">From $15.51 CAD</p>
               <div id="paypal-container-PMS7AVBNHBNV8"></div>
+              <script>
+                paypal.HostedButtons({
+                  hostedButtonId: "PMS7AVBNHBNV8",
+                }).render("#paypal-container-PMS7AVBNHBNV8");
+              </script>
             </div>
           </article>
 
@@ -519,6 +550,11 @@ While the present overall production value may be limited (as with most independ
               <h3 style="margin:0 0 6px">Black Adult Knit Beanie</h3>
               <p class="price">From $25.94 CAD</p>
               <div id="paypal-container-5NCN93SDLBG26"></div>
+              <script>
+                paypal.HostedButtons({
+                  hostedButtonId: "5NCN93SDLBG26",
+                }).render("#paypal-container-5NCN93SDLBG26");
+              </script>
             </div>
           </article>
 
@@ -531,9 +567,35 @@ While the present overall production value may be limited (as with most independ
               <h3 style="margin:0 0 6px">Black Cuffed Beanie</h3>
               <p class="price">From $25.54 CAD</p>
               <div id="paypal-container-KYKHVAF6VANPE"></div>
+              <script>
+                paypal.HostedButtons({
+                  hostedButtonId: "KYKHVAF6VANPE",
+                }).render("#paypal-container-KYKHVAF6VANPE");
+              </script>
             </div>
           </article>
 
+        </div>
+      </div>
+    </section>
+
+    <!-- Support (Buy Me A Coffee) — small section right under Store -->
+    <section id="support">
+      <div class="wrap">
+        <div class="support-card">
+          <span class="bmc-icon" aria-hidden="true">
+            <!-- Simple coffee cup outline -->
+            <svg viewBox="0 0 24 24">
+              <path d="M4 8h12v7a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8z" stroke-linejoin="round"></path>
+              <path d="M16 9h2.5a2.5 2.5 0 0 1 0 5H16" stroke-linecap="round"></path>
+              <path d="M6 8V6m4 2V5m4 3V6" stroke-linecap="round"></path>
+            </svg>
+          </span>
+          <div style="flex:1">
+            <div style="font-weight:700;margin-bottom:6px">Support The Essence</div>
+            <div class="lead" style="margin:0 0 10px">If you’d like to support directly, you can “Buy Me A Coffee.”</div>
+          </div>
+          <a class="btn" href="https://buymeacoffee.com/theessence" target="_blank" rel="noopener">Buy Me A Coffee</a>
         </div>
       </div>
     </section>
@@ -971,17 +1033,6 @@ While the present overall production value may be limited (as with most independ
       e.preventDefault();
       generatePressKitZip();
     });
-
-    // ===========================
-    // PayPal Hosted Buttons render calls (for each product)
-    // ===========================
-    if (window.paypal && paypal.HostedButtons){
-      try { paypal.HostedButtons({ hostedButtonId: "UJFWA9QEZWQ7A" }).render("#paypal-container-UJFWA9QEZWQ7A"); } catch(e){}
-      try { paypal.HostedButtons({ hostedButtonId: "SAGFPKDKK2KQY" }).render("#paypal-container-SAGFPKDKK2KQY"); } catch(e){}
-      try { paypal.HostedButtons({ hostedButtonId: "PMS7AVBNHBNV8" }).render("#paypal-container-PMS7AVBNHBNV8"); } catch(e){}
-      try { paypal.HostedButtons({ hostedButtonId: "5NCN93SDLBG26" }).render("#paypal-container-5NCN93SDLBG26"); } catch(e){}
-      try { paypal.HostedButtons({ hostedButtonId: "KYKHVAF6VANPE" }).render("#paypal-container-KYKHVAF6VANPE"); } catch(e){}
-    }
 
     // ===========================
     // Simple gallery rotator (every ~5s) for elements with data-images
