@@ -36,7 +36,7 @@
   <link rel="preload" as="image" href="hero.jpg?v=4" />
   <link rel="preload" as="image" href="site-bg-poster.jpg?v=5" />
   <link rel="preload" as="video" href="site-bg.mp4?v=5" type="video/mp4" />
-  <!-- New: preload Martyr cover -->
+  <!-- Martyr cover preload -->
   <link rel="preload" as="image" href="martyr-cover.jpg?v=1" />
 
   <style>
@@ -50,7 +50,7 @@
       --card:#151822;
       --border:#232632;
       --shadow:0 10px 30px rgba(0,0,0,.35);
-      /* New: red accent for Martyr pre-save */
+      /* Red accent for Martyr */
       --accent-red:#ff3b3b;
     }
 
@@ -311,7 +311,7 @@
     .support-card a.btn{ border-color:var(--accent2); }
     .support-card a.btn:hover{ background:rgba(76,177,255,.08); }
 
-    /* New: red outline CTA (matches cta--outline style) */
+    /* Red outline CTA (matches cta--outline proportions) */
     .cta--red-outline{
       background:transparent;
       color:var(--accent-red);
@@ -404,32 +404,14 @@
       </div>
     </header>
 
-    <!-- ===========================
-         NEW: Martyr Announcement (transparent)
-         =========================== -->
-    <section id="martyr" aria-label="New single announcement">
-      <div class="wrap">
-        <div class="media-grid" style="align-items:center">
-          <div>
-            <h2 style="margin:0 0 6px">New Single — <em>Martyr</em></h2>
-            <p class="lead" style="margin-bottom:14px">Coming <strong>October 24th, 2025</strong></p>
-            <div class="row" style="gap:12px">
-              <a class="cta cta--red-outline" href="https://artists.landr.com/057829785076" target="_blank" rel="noopener">Pre-Save</a>
-            </div>
-          </div>
-          <div>
-            <img src="martyr-cover.jpg?v=1" alt="Martyr — single cover" style="border-radius:14px;border:1px solid var(--border);max-width:380px;margin-left:auto">
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Hero -->
     <section class="hero" id="home" aria-label="Hero">
       <!-- hero-bg DIV intentionally removed -->
       <div class="hero-inner">
         <div class="row" style="justify-content:center;gap:18px;margin:18px 0 8px">
-          <a class="cta cta--outline" href="https://artists.landr.com/990591880986" target="_blank" rel="noopener">Entropy — Listen Now</a>
+          <!-- Updated: Martyr is now the prominent (red outline) hero button -->
+          <a class="cta cta--red-outline" href="https://artists.landr.com/057829785076" target="_blank" rel="noopener">Martyr — Listen Now</a>
+          <a class="btn" href="https://artists.landr.com/990591880986" target="_blank" rel="noopener">Entropy — All Platforms</a>
           <a class="btn" href="https://artists.landr.com/055905269007" target="_blank" rel="noopener">Caverns — All Platforms</a>
           <a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
         </div>
@@ -446,6 +428,19 @@
         <h2>Music</h2>
         <p class="lead">Featured releases. Stream everywhere via the promo link.</p>
         <div class="cards">
+          <!-- NEW: Martyr tile (first) -->
+          <article class="card">
+            <img src="martyr-cover.jpg?v=1" alt="Martyr — single cover" />
+            <div class="pad">
+              <h3 style="margin:0 0 6px">Martyr</h3>
+              <p class="lead">Single · 2025</p>
+              <div class="row">
+                <a class="btn" href="https://artists.landr.com/057829785076" target="_blank" rel="noopener">All Platforms</a>
+                <a class="btn" href="https://www.youtube.com/@theessence7391" target="_blank" rel="noopener">YouTube</a>
+              </div>
+            </div>
+          </article>
+
           <article class="card">
             <img src="entropy-cover.png" alt="Entropy — single cover" />
             <div class="pad">
@@ -457,6 +452,7 @@
               </div>
             </div>
           </article>
+
           <article class="card">
             <img src="caverns-cover.png" alt="Caverns — album cover" />
             <div class="pad">
